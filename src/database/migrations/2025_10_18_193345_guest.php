@@ -14,7 +14,7 @@ return new class extends Migration
             $table->integer('guest_session_id')->unsigned();
             $table->dateTime('created_at');
             $table->string('allergen_filter')->nullable();
-            $table->foreign('guest_session_id')->references('session_id')->on('guest_session')->onDelete('cascade');
+            $table->foreign('guest_session_id')->references('session_id')->on('guest_session')->onDelete('cascade'); //
 
             //
         });

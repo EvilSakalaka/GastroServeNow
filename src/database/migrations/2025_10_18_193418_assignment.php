@@ -16,7 +16,7 @@ return new class extends Migration
             $table->dateTime('assigned_at');
             $table->string('status');
             $table->foreign('table_number')->references('table_number')->on('table_location')->onDelete('cascade');
-            $table->foreign('id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('id')->references('id')->on('users')->onDelete('cascade'); //
         });
 
     }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->dateTime('started_at');
             $table->dateTime('ended_at')->nullable();
             $table->boolean('active');
-            $table->foreign('table_number')->references('table_number')->on('table_location')->onDelete('cascade');
+            $table->foreign('table_number')->references('table_number')->on('table_location')->onDelete('cascade'); //
         });
     }
 

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('role');
             $table->boolean('active');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); //
         });
     }
 

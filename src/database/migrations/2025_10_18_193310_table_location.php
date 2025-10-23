@@ -13,7 +13,7 @@ return new class extends Migration
             $table->integer('table_number')->unsigned()->primary();
             $table->string('location_description')->nullable();
             $table->string('status');
-            $table->boolean('active');
+            $table->boolean('active'); //
     });
     }
 
