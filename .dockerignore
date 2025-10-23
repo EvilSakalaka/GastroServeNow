@@ -1,0 +1,16 @@
+.git
+.gitignore
+
+.DS_Store
+Thumbs.db
+
+.idea
+.vscode
+
+.dockerignore
+Dockerfile
+docker-compose.yml
+src/node_modules
+src/vendor
+.env
+src/.env
