@@ -11,11 +11,11 @@ return new class extends Migration
     {
         Schema::create('staff', function (Blueprint $table) {
             $table->increments('staff_id');
-            $table->integer('id')->unsigned();
+            $table->unsignedBigInteger('user_id');
             $table->string('name');
             $table->string('role');
             $table->boolean('active');
-            $table->foreign('id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
