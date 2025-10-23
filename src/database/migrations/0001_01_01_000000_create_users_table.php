@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('username', 50)->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password_hash');
+            $table->string('password');
             $table->string('role');
             $table->enum('status', ['active', 'inactive']);
             //$table->dateTime('created_at');
