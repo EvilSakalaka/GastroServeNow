@@ -63,5 +63,14 @@ services:
     networks:
       - laravel-development
 
+  node:
+    image: node:20
+    working_dir: /var/www
+    volumes:
+      - ./src:/var/www
+    ports:
+      - "5173:5173"
+    command: tail -f /dev/null
+
 networks:
   laravel-development:
