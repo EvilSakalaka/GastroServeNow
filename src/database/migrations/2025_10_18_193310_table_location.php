@@ -10,10 +10,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('table_location', function (Blueprint $table) {
-            $table->integer('table_number')->primary();
+            $table->integer('table_number')->unsigned()->primary();
             $table->string('location_description')->nullable();
             $table->string('status');
-            $table->boolean('active');
+            $table->boolean('active'); //
     });
     }
 

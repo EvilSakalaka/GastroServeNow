@@ -12,11 +12,11 @@ return new class extends Migration
         Schema::create('assignment', function (Blueprint $table) {
             $table->increments('assignment_id');
             $table->integer('table_number')->unsigned();
-            $table->integer('id')->unsigned();
+            $table->unsignedBigInteger('id');
             $table->dateTime('assigned_at');
             $table->string('status');
             $table->foreign('table_number')->references('table_number')->on('table_location')->onDelete('cascade');
-            $table->foreign('id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('id')->references('id')->on('users')->onDelete('cascade'); //
         });
 
     }
