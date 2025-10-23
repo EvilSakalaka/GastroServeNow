@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password_hash');
             $table->string('role');
             $table->enum('status', ['active', 'inactive']);
-            $table->dateTime('created_at');
+            //$table->dateTime('created_at');
             $table->rememberToken();
             $table->timestamps();
         });
