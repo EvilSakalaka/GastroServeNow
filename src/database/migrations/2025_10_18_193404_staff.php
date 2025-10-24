@@ -15,7 +15,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('role');
             $table->boolean('active');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); //
+            $table->unsignedInteger('assigned_area_id')->nullable();
+            $table->foreign('assigned_area_id')->references('area_id')->on('areas')->onDelete('set null');
         });
     }
 
