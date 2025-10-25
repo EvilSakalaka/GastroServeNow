@@ -12,7 +12,7 @@ Route::get('/', function () {
 });
 
 //Route::get('/dashboard', function () {
-//    return view('dashboard');
+//   return view('dashboard');
 //})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/dashboard', function () {
@@ -47,6 +47,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/waiter/dashboard', WaiterDashboard::class)
         ->middleware('role:waiter,manager')
         ->name('waiter.dashboard');
+
+    //Státusz módosítás pincérnek
+    Route::patch('/waiter/tables/{table}/make-available', [WaiterDashboard::class, 'makeAvailable'])
+        ->middleware('role:waiter,manager')
+        ->name('waiter.tables.makeAvailable');
+    // ======================
 
     // A SZAKÁCS oldala (Csak 'chef' ÉS 'manager' láthatja)
     Route::get('/chef/dashboard', ChefDashboard::class)
