@@ -19,6 +19,7 @@ class Staff extends Model
         'user_id',
         'name',
         'role',
+        'assigned_area_id', // a saját területe
         'active',
     ];
 
@@ -29,13 +30,33 @@ class Staff extends Model
         'manager',
     ];
 
+    public static array $areaOptions = [
+        'kitchen',
+        'bar',
+        'all', // manager mindent lát
+    ];
+
     public static array $rules = [
         'user_id' => 'required|integer|exists:users,id',
         'name' => 'required|string|max:100',
         'role' => 'required|string|in:waiter,chef,bartender,manager',
+        'assigned_area_id' => 'nullable|string|in:kitchen,bar,all', // új validáció
         'active' => 'required|boolean',
     ];
 
+    public function assignedArea()
+    {
+        return $this->belongsTo(Area::class, 'assigned_area_id', 'area_id');
+    }
+
+    public function canViewArea($areaId)
+    {
+        if ($this->role === 'manager' || $this->assigned_area_id === null) {
+            return true; // manager vagy mindent lát
+        }
+        
+        return $this->assigned_area_id === $areaId;
+    }
 
     public function user()
     {

@@ -16,11 +16,11 @@ class Guest extends Model
     protected $fillable = [
         'guest_session_id',
         'created_at',
-        'allergen_filter',
+        //'allergen_filter',
     ];
 
     
-    public static array $allergenOptions = [
+    /*public static array $allergenOptions = [
         'none',
         'gluten',
         'nuts',
@@ -29,18 +29,22 @@ class Guest extends Model
         'soy',
         'eggs',
         'fish',
-    ];
-
+    ];*/
 
     public static array $rules = [
         'guest_session_id' => 'required|integer|exists:guest_session,session_id',
         'created_at' => 'required|date',
-        'allergen_filter' => 'nullable|string|in:none,gluten,nuts,dairy,shellfish,soy,eggs,fish',
+        //'allergen_filter' => 'nullable|string|in:none,gluten,nuts,dairy,shellfish,soy,eggs,fish',
     ];
 
 
     public function session()
     {
         return $this->belongsTo(GuestSession::class, 'guest_session_id', 'session_id');
+    }
+    
+       public function allergens()
+    {
+        return $this->belongsToMany(Allergen::class, 'guest_allergens', 'guest_id', 'allergen_id');
     }
 }

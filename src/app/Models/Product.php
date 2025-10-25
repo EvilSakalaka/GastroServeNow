@@ -22,8 +22,8 @@ class Product extends Model
         'status',
         'photo_url',
         'is_featured',
-        'allergen_tags',
-        'area',
+        //'allergen_tags',
+        'area_id',
         //'stock_qty', - ha bővítjük
     ];
 
@@ -34,10 +34,19 @@ class Product extends Model
         'status' => 'required|in:available,unavailable,archived',
         'photo_url' => 'nullable|url|max:255',
         'is_featured' => 'boolean',
-        'allergen_tags' => 'nullable|string|max:100',
-        'area' => 'nullable|string|max:50',
+        //'allergen_tags' => 'nullable|string|max:100',
+        //'area' => 'nullable|string|max:50',
         //'stock_qty' => 'required|integer|min:0',
     ];
+
+    public function allergens()
+    {
+        return $this->belongsToMany(Allergen::class, 'product_allergens', 'product_id', 'allergen_id');
+    }
+        public function area()
+    {
+        return $this->belongsTo(Area::class, 'area_id', 'area_id');
+    }
 
 
 }

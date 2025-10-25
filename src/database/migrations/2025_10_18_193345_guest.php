@@ -13,10 +13,10 @@ return new class extends Migration
             $table->increments('guest_id');
             $table->integer('guest_session_id')->unsigned();
             $table->dateTime('created_at');
-            $table->string('allergen_filter')->nullable();
+            //$table->string('allergen_filter')->nullable();
             $table->foreign('guest_session_id')->references('session_id')->on('guest_session')->onDelete('cascade'); //
 
-            //
+            
         });
 
     }
