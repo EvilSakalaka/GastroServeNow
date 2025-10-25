@@ -17,9 +17,11 @@ return new class extends Migration
             $table->string('status');
             $table->string('photo_url')->nullable();
             $table->boolean('is_featured')->default(false);
-            $table->string('allergen_tags')->nullable();
-            $table->string('area')->nullable();
-            $table->integer('stock_qty');
+            //$table->string('allergen_tags')->nullable();
+            //$table->string('area')->nullable();
+            //$table->integer('stock_qty');
+            $table->unsignedInteger('area_id')->nullable()->after('category');
+            $table->foreign('area_id')->references('area_id')->on('areas')->onDelete('set null');
         });
     }
 

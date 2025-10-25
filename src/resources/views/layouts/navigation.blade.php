@@ -12,9 +12,23 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                    @if (Auth::user()->role == 'manager')
+                        <x-nav-link :href="route('waiter.dashboard')" :active="request()->routeIs('waiter.dashboard')">
+                            {{ __('Pincér') }}
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('chef.dashboard')" :active="request()->routeIs('chef.dashboard')">
+                            {{ __('Szakács') }}
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('bartender.dashboard')" :active="request()->routeIs('bartender.dashboard')">
+                            {{ __('Pultos') }}
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('manager.admin_page')" :active="request()->routeIs('manager.admin_page')">
+                            {{ __('Manager') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -35,7 +49,7 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            {{ __('Profilom') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -45,7 +59,7 @@
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                {{ __('Kijelentkezés') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -67,9 +81,23 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
+            @if (Auth::user()->role == 'manager')
+                <x-responsive-nav-link :href="route('waiter.dashboard')" :active="request()->routeIs('waiter.dashboard')">
+                    {{ __('Pincér') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('chef.dashboard')" :active="request()->routeIs('chef.dashboard')">
+                    {{ __('Szakács') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('bartender.dashboard')" :active="request()->routeIs('bartender.dashboard')">
+                    {{ __('Pultos') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('manager.admin_page')" :active="request()->routeIs('manager.admin_page')">
+                    {{ __('Manager') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

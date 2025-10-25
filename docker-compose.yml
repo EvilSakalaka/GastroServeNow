@@ -17,6 +17,16 @@ services:
       php-fpm:
         condition: service_started  # Wait for php-fpm to start
 
+  sqlite:
+    image: hibitdev/sqlite:latest
+    container_name: sqlite
+    hostname: sqlite.hibit
+    ports:
+      - "8191:8191"
+    volumes:
+      - ./sqlite:/db
+    command: ["tail", "-f", "/dev/null"]  # Keeps the container running
+
   php-fpm:
     # For the php-fpm service, we will create a custom image to install the necessary PHP extensions and setup proper permissions.
     build:
@@ -40,23 +50,6 @@ services:
       - ./src:/var/www
     networks:
       - laravel-development
-    depends_on:
-      mariadb:
-        condition: service_started  # Wait for mariadb to start
-
-  mariadb:
-    image: mariadb:12.0.2
-    ports:
-      - "3306:3306"
-    environment:
-      - MARIADB_DATABASE=app
-      - MARIADB_USER=appuser
-      - MARIADB_PASSWORD=apppassword
-      - MARIADB_ROOT_PASSWORD=rootpassword
-    volumes:
-      - "./docker/mariadb/GastroServeNow.sql:/docker-entrypoint-initdb.d/GastroServeNow.sql:ro"
-    networks:
-      - laravel-development
 
   redis:
     image: redis:alpine
@@ -68,9 +61,13 @@ services:
     working_dir: /var/www
     volumes:
       - ./src:/var/www
+      - node_modules_volume:/var/www/node_modules
     ports:
       - "5173:5173"
     command: tail -f /dev/null
 
 networks:
   laravel-development:
+
+volumes:
+  node_modules_volume:
