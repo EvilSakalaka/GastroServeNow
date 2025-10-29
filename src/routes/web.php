@@ -6,9 +6,13 @@ use App\Http\Controllers\Waiter\DashboardController as WaiterDashboard;
 use App\Http\Controllers\Chef\DashboardController as ChefDashboard;
 use App\Http\Controllers\Bartender\DashboardController as BartenderDashboard;
 use App\Http\Controllers\Manager\AdminPageController as ManagerAdminPage;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
 Route::get('/', function () {
-    return view('welcome');
+    if (Auth::guest()) {
+        return redirect()->route('login');
+    }
+    return redirect()->route('dashboard');
 });
 
 //Route::get('/dashboard', function () {
@@ -62,6 +66,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/manager/admin', ManagerAdminPage::class)
         ->middleware('role:manager')
         ->name('manager.admin_page');
+
 });
 
 require __DIR__.'/auth.php';
