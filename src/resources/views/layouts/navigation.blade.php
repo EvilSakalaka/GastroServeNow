@@ -28,6 +28,11 @@
                         <x-nav-link :href="route('manager.admin_page')" :active="request()->routeIs('manager.admin_page')">
                             {{ __('Manager') }}
                         </x-nav-link>
+
+                        <x-nav-link :href="route('register')" :active="request()->routeIs('register')">
+                            {{ __('Új felhasználó') }}
+                        </x-nav-link>
+
                     @endif
                 </div>
             </div>
@@ -96,6 +101,9 @@
 
                 <x-responsive-nav-link :href="route('manager.admin_page')" :active="request()->routeIs('manager.admin_page')">
                     {{ __('Manager') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('register')" :active="request()->routeIs('register')">
+                    {{ __('Új felhasználó') }}
                 </x-responsive-nav-link>
             @endif
         </div>
