@@ -18,11 +18,14 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('role');
+            #$table->string('role');
+            $table->enum('role', ['waiter', 'chef', 'bartender', 'manager', 'admin']);
             $table->enum('status', ['active', 'inactive']);
+            $table->unsignedInteger('assigned_area_id')->nullable();
             //$table->dateTime('created_at');
             $table->rememberToken();
             $table->timestamps();
+            $table->foreign('assigned_area_id')->references('area_id')->on('areas')->onDelete('set null');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
