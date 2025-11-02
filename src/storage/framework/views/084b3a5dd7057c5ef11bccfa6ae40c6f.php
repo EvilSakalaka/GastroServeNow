@@ -141,11 +141,11 @@
                                     <?php
                                         $product->load('allergens');
                                     ?>
-                                    
+                                   
 
                                 <div class="border rounded-lg p-4 flex justify-between items-center">
                                     <div class="flex items-center space-x-2">
-                                        
+                                
                                         <button type="button" @click="openModal(<?php echo e(json_encode($product)); ?>)" class="flex-shrink-0 w-6 h-6 rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 flex items-center justify-center font-bold text-sm">i</button>
                                         <div>
                                             <div class="font-medium"><?php echo e($product->name); ?></div>
