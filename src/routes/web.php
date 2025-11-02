@@ -69,10 +69,17 @@ Route::middleware(['auth'])->group(function () {
         ->name('bartender.dashboard');
 
     // A MANAGER admin oldala (CSAK 'manager' láthatja)
-    Route::get('/manager/admin', ManagerAdminPage::class)
-        ->middleware('role:manager')
-        ->name('manager.admin_page');
+    Route::prefix('manager')->group(function () {
 
+        Route::get('/', ManagerAdminPage::class)->name('manager.admin_page');
+        Route::get('items', [ManagerAdminPage::class, 'itemsPage'])->name('manager.items_page');
+        Route::get('tip', [ManagerAdminPage::class, 'tipPage'])->name('manager.tip_page');
+        Route::get('workers', [ManagerAdminPage::class, 'workersPage'])->name('manager.workers_page');
+
+        Route::post('add-worker', [ManagerAdminPage::class, 'addWorker'])->name('manager.add_worker');
+        
+    })->middleware('role:manager');
+        
 });
 
 require __DIR__.'/auth.php';
