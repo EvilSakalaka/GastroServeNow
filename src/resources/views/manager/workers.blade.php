@@ -18,9 +18,9 @@
             </thead>
             <tbody>
                 @foreach ($workers as $worker)
-                <tr class="border-t">
-                    <td class="px-4 py-2">{{ $worker->name }}</td>
-                    <td class="px-4 py-2">{{ $worker->role }}</td>
+                <tr class="border-t" id={{ "worker.$worker->id" }}>
+                    <td id={{ "worker.$worker->id.name" }} class="px-4 py-2">{{ $worker->name }}</td>
+                    <td id={{ "worker.$worker->id.role" }} class="px-4 py-2">{{ $worker->role }}</td>
                     <td class="px-4 py-2">
                         <button class="bg-yellow-500 text-white px-2 py-1 rounded mr-2">Szerkesztés</button>
                         <button class="bg-red-500 text-white px-2 py-1 rounded">Törlés</button>
@@ -41,12 +41,21 @@
                         <input type="text" id="name" name="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                     </div>
                     <div class="mb-3">
-                        <label for="username" class="block text-sm font-medium text-gray-700">Username:</label>
+                        <label for="username" class="block text-sm font-medium text-gray-700">Felhasználói Név::</label>
                         <input type="text" id="username" name="username" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                     </div>
                     <div class="mb-3">
+                        <label for="password" class="block text-sm font-medium text-gray-700">Jelszó:</label>
+                        <input type="password" id="password" name="password" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                    </div>
+                    <div class="mb-3">
                         <label for="role" class="block text-sm font-medium text-gray-700">Beosztás:</label>
-                        <input type="text" id="role" name="role" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        <select id="role" name="role" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            <option value="waiter">Pincér</option>
+                            <option value="chef">Shéf</option>
+                            <option value="bartender">Pultos</option>
+                            <option value="manager">Menedzser</option>
+                        </select>
                     </div>
                     <div class="flex justify-end gap-2 mt-4">
                         <button id="add_form_hide" type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Mégse</button>
