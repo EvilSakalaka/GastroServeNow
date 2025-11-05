@@ -12,18 +12,22 @@
             <thead class="bg-gray-200">
                 <tr>
                     <th class="px-4 py-2">Dolgozó Név</th>
+                    <th class="px-4 py-2">Felhasználói Név</th>
                     <th class="px-4 py-2">Beosztás</th>
+                    <th class="px-4 py-2">Aktív/Inaktív</th>
                     <th class="px-4 py-2">Műveletek</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($workers as $worker)
-                <tr class="border-t" id={{ "worker.$worker->id" }}>
-                    <td id={{ "worker.$worker->id.name" }} class="px-4 py-2">{{ $worker->name }}</td>
-                    <td id={{ "worker.$worker->id.role" }} class="px-4 py-2">{{ $worker->role }}</td>
+                <tr class="border-t">
+                    <td class="px-4 py-2">{{ $worker->name }}</td>
+                    <td class="px-4 py-2">{{ $worker->username }}</td>
+                    <td class="px-4 py-2">{{ $worker->role }}</td>
+                    <td class="px-4 py-2">{{ $worker->status }}</td>
                     <td class="px-4 py-2">
-                        <button class="bg-yellow-500 text-white px-2 py-1 rounded mr-2">Szerkesztés</button>
-                        <button class="bg-red-500 text-white px-2 py-1 rounded">Törlés</button>
+                        <button class="bg-yellow-500 text-white px-2 py-1 rounded mr-2" onclick="editWorker({{ $worker->id }}, '{{ $worker->name }}', '{{ $worker->username }}', '{{ $worker->role }}', '{{ $worker->status }}')">Szerkesztés</button>
+                        <button class="bg-red-500 text-white px-2 py-1 rounded" onclick="deleteWorker({{ $worker->id }}, '{{ $worker->name }}')">Törlés</button>
                     </td>
                 </tr>
                 @endforeach
@@ -31,11 +35,13 @@
         </table>
 
         <!-- Modal overlay -->
-        <div id="add_form" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+        <div id="add_form_overlay" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden" method="post">
             <!-- Modal box -->
             <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
                 <h3 class="text-lg font-bold mb-4">Új dolgozó hozzáadása</h3>
-                <form id="add_form" action="{{ route('manager.add_worker') }}">
+                <form id="add_form" action="{{ route('manager.add_worker') }} method="post">
+                    {{ csrf_field() }}
+                    <input id="worker_id" type="hidden" name="worker_id" value="">
                     <div class="mb-3">
                         <label for="name" class="block text-sm font-medium text-gray-700">Név:</label>
                         <input type="text" id="name" name="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
@@ -57,9 +63,37 @@
                             <option value="manager">Menedzser</option>
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <span class="block text-sm font-medium text-gray-700 mb-1">Státusz:</span>
+                        <label class="inline-flex items-center mr-4">
+                            <input type="radio" id="status_active" name="status" value="active" class="form-radio text-blue-600" checked>
+                            <span class="ml-2">Aktív</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" id="status_inactive" name="status" value="inactive" class="form-radio text-blue-600">
+                            <span class="ml-2">Inaktív</span>
+                        </label>
+                    </div>
                     <div class="flex justify-end gap-2 mt-4">
                         <button id="add_form_hide" type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Mégse</button>
                         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Hozzáadás</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="delete_form_overlay" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden" method="post">
+            <!-- Modal box -->
+            <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+                <h3 class="text-lg font-bold mb-4">Új dolgozó hozzáadása</h3>
+                <form id="delete_form" method="delete" action="{{ route('manager.delete_worker') }}">
+                    <input id="worker_id" type="hidden" name="worker_id" value="">
+                    <div class="mb-3">
+                        Biztos törölni szeretnéd <span id="delete_worker_name"></span> dolgozót?
+                    </div>
+                    <div class="flex justify-end gap-2 mt-4">
+                        <button id="delete_form_hide" type="button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-red-600">Mégse</button>
+                        <button type="submit" class=" bg-red-500 text-white px-4 py-2 rounded hover:bg-blue-700">Törlés</button>
                     </div>
                 </form>
             </div>
