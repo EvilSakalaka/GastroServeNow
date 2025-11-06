@@ -11,7 +11,7 @@ class WorkerEditRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,8 +24,8 @@ class WorkerEditRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:50',
-            'email' => 'required|email',
-            'password' => 'required|string|min:8',
+            'email' => 'email',
+            'password' => 'nullable|string|min:8',
             'role' => 'required|in:manager,waiter,chef,bartender',
             'status' => 'required|in:active,inactive',
         ];

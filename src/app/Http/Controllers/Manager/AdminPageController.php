@@ -7,12 +7,14 @@ use App\Http\Requests\manager\WorkerAddRequest;
 use App\Http\Requests\manager\WorkerEditRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AdminPageController extends Controller
 {
     #region Show Pages
     public function showWorkersPage(Request $request)
     {
+        \Log::info('Dolgozók oldal megtekintve');
         $workers = User::all();
         return view('manager.workers', ['workers' => $workers]);
     }
@@ -41,7 +43,9 @@ class AdminPageController extends Controller
 
     public function editWorker(WorkerEditRequest $request)
     {
+        \Log::info('editWorker hívva', $request->all());
         if ($request->validated()) {
+            \Log::info('Validáció sikeres');
             $worker = User::find($request->worker_id);
             $worker->name = $request->name;
             $worker->username = $request->username;
@@ -49,7 +53,10 @@ class AdminPageController extends Controller
                 $worker->password = bcrypt($request->password);
             }
             $worker->role = $request->role;
+            $worker->status = $request->status;
             $worker->save();
+        } else {
+            \Log::warning('Validáció sikertelen');
         }
         return redirect()->route('manager.workers_page');
     }

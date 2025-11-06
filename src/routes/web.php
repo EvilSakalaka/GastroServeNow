@@ -78,10 +78,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('workers', [ManagerAdminPage::class, 'showWorkersPage'])->name('manager.workers_page');
 
         Route::post('add-worker', [ManagerAdminPage::class, 'addWorker'])->name('manager.add_worker');
-        Route::patch('edit-worker', [ManagerAdminPage::class, 'editWorker'])->name('manager.edit_worker');
+        Route::post('edit-worker', [ManagerAdminPage::class, 'editWorker'])->name('manager.edit_worker');
         Route::delete('delete-worker', [ManagerAdminPage::class, 'deleteWorker'])->name('manager.delete_worker');
-
-    
         
     })->middleware('role:manager');
     
