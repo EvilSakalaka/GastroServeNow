@@ -73,13 +73,13 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('manager')->group(function () {
 
         Route::get('/', ManagerAdminPage::class)->name('manager.admin_page');
-        Route::get('items', [ManagerAdminPage::class, 'itemsPage'])->name('manager.items_page');
-        Route::get('tip', [ManagerAdminPage::class, 'tipPage'])->name('manager.tip_page');
-        Route::get('workers', [ManagerAdminPage::class, 'workersPage'])->name('manager.workers_page');
+        Route::get('items', [ManagerAdminPage::class, 'showItemsPage'])->name('manager.items_page');
+        Route::get('tip', [ManagerAdminPage::class, 'showTipPage'])->name('manager.tip_page');
+        Route::get('workers', [ManagerAdminPage::class, 'showWorkersPage'])->name('manager.workers_page');
 
         Route::post('add-worker', [ManagerAdminPage::class, 'addWorker'])->name('manager.add_worker');
-
-    
+        Route::post('edit-worker', [ManagerAdminPage::class, 'editWorker'])->name('manager.edit_worker');
+        Route::delete('delete-worker', [ManagerAdminPage::class, 'deleteWorker'])->name('manager.delete_worker');
         
     })->middleware('role:manager');
     
