@@ -43,9 +43,8 @@ class AdminPageController extends Controller
 
     public function editWorker(WorkerEditRequest $request)
     {
-        \Log::info('editWorker hívva', $request->all());
+        
         if ($request->validated()) {
-            \Log::info('Validáció sikeres');
             $worker = User::find($request->worker_id);
             $worker->name = $request->name;
             $worker->username = $request->username;
@@ -57,6 +56,17 @@ class AdminPageController extends Controller
             $worker->save();
         } else {
             \Log::warning('Validáció sikertelen');
+        }
+        return redirect()->route('manager.workers_page');
+    }
+
+    public function deleteWorker(Request $request)
+    {
+        \Log::info('Dolgozó törlés indítva',['worker_id' => $request->worker_id]);
+        $worker = User::find($request->worker_id);
+        if ($worker) {
+            \Log::info('Dolgozó törölve: ' . $worker->username);
+            $worker->delete();
         }
         return redirect()->route('manager.workers_page');
     }
