@@ -47,7 +47,7 @@ window.editWorker = function(workerId, worker_name, worker_username, worker_role
 }
 
 window.deleteWorker = function(workerId, worker_name) {
-    $('#add_form #worker_id').val(workerId);
+    $('#delete_form #worker_id').val(workerId);
     $('#delete_worker_name').text(worker_name);
     $('#delete_form_overlay').removeClass('hidden');
 }
