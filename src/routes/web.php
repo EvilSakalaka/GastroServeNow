@@ -70,20 +70,22 @@ Route::middleware(['auth'])->group(function () {
         ->name('bartender.dashboard');
 
     // A MANAGER admin oldala (CSAK 'manager' láthatja)
-    Route::prefix('manager')->group(function () {
+    Route::middleware(['auth', 'role:manager'])
+        ->prefix('manager')
+        ->name('manager.')
+        ->group(function () {
 
-        Route::get('/', ManagerAdminPage::class)->name('manager.admin_page');
-        Route::get('items', [ManagerAdminPage::class, 'showItemsPage'])->name('manager.items_page');
-        Route::get('tip', [ManagerAdminPage::class, 'showTipPage'])->name('manager.tip_page');
-        Route::get('workers', [ManagerAdminPage::class, 'showWorkersPage'])->name('manager.workers_page');
+            Route::get('/', ManagerAdminPage::class)->name('admin_page');
+            Route::get('items', [ManagerAdminPage::class, 'showItemsPage'])->name('items_page');
+            Route::get('tip', [ManagerAdminPage::class, 'showTipPage'])->name('tip_page');
+            Route::get('workers', [ManagerAdminPage::class, 'showWorkersPage'])->name('workers_page');
 
-        Route::post('add-worker', [ManagerAdminPage::class, 'addWorker'])->name('manager.add_worker');
-        Route::post('edit-worker', [ManagerAdminPage::class, 'editWorker'])->name('manager.edit_worker');
-        Route::post('delete-worker', [ManagerAdminPage::class, 'deleteWorker'])->name('manager.delete_worker');
-        
-    })->middleware('role:manager');
-    
-        Route::patch('/waiter/tables/{table}/make-reserved', [WaiterDashboard::class, 'makeReserved'])
+            Route::post('add-worker', [ManagerAdminPage::class, 'addWorker'])->name('add_worker');
+            Route::post('edit-worker', [ManagerAdminPage::class, 'editWorker'])->name('edit_worker');
+            Route::post('delete-worker', [ManagerAdminPage::class, 'deleteWorker'])->name('delete_worker');
+        });
+
+    Route::patch('/waiter/tables/{table}/make-reserved', [WaiterDashboard::class, 'makeReserved'])
         ->middleware('role:waiter,manager')
         ->name('waiter.tables.makeReserved');
     // Új útvonal a "Felszolgálás" (occupied) állapothoz.
@@ -102,9 +104,9 @@ Route::middleware(['auth'])->group(function () {
      Route::get('/waiter/orders/success/{order}', [OrderController::class, 'showSuccess'])
     ->middleware('role:waiter,manager')
     ->name('waiter.orders.success');
-    
 
-        
+
+
 });
 
 require __DIR__.'/auth.php';
