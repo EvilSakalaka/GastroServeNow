@@ -106,7 +106,7 @@
         <div id="delete_form_overlay" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
             <!-- Modal box -->
             <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
-                <h3 class="text-lg font-bold mb-4">Új dolgozó hozzáadása</h3>
+                <h3 class="text-lg font-bold mb-4">Dolgozó törlése</h3>
                 <form id="delete_form" method="post" action="{{ route('manager.delete_worker') }}">
                     @csrf
                     <input id="worker_id" type="hidden" name="worker_id" value="">
