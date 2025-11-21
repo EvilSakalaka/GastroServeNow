@@ -80,6 +80,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('add-worker', [ManagerAdminPage::class, 'addWorker'])->name('manager.add_worker');
         Route::post('edit-worker', [ManagerAdminPage::class, 'editWorker'])->name('manager.edit_worker');
         Route::post('delete-worker', [ManagerAdminPage::class, 'deleteWorker'])->name('manager.delete_worker');
+
+        Route::post('/add-product', [ManagerAdminPage::class, 'addProduct'])->name('manager.add_product');
+        Route::post('/edit-product', [ManagerAdminPage::class, 'editProduct'])->name('manager.edit_product');
+        Route::post('/delete-product', [ManagerAdminPage::class, 'deleteProduct'])->name('manager.delete_product');
         
     })->middleware('role:manager');
     

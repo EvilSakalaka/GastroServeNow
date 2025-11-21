@@ -44,7 +44,7 @@ class Product extends Model
     {
         return $this->belongsToMany(Allergen::class, 'product_allergens', 'product_id', 'allergen_id');
     }
-        public function area()
+    public function area()
     {
         return $this->belongsTo(Area::class, 'area_id', 'area_id');
     }
