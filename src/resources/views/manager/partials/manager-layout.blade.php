@@ -4,7 +4,7 @@
             {{ __('Manager oldal') }}
         </h2>
     </x-slot>
-    <div class="flex flex-row w-full" style="background-image: url('/images/main_img.png'); background-size: cover; min-height: calc(100vh - 9rem);">
+    <div class="flex flex-row w-full gap-3" style="background-image: url('/images/main_img.png'); background-size: cover; min-height: calc(100vh - 9rem);">
         <div class="h-full min-h-[calc(100vh-9rem)]">
             @include('manager.partials.sidebar')
         </div>

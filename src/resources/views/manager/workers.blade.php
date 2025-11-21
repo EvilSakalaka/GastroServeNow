@@ -2,7 +2,7 @@
 @section("manager_content")
 
     <div>
-        <table class="mt-6 w-full border border-gray-300 rounded-lg overflow-hidden">
+        <table class="mt-6 w-full border border-gray-300 bg-white rounded-lg overflow-hidden">
             <thead class="bg-gray-200">
                 <tr>
                     <th class="px-4 py-2">Dolgozó Név</th>

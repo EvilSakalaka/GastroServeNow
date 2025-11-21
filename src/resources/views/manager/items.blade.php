@@ -1,44 +1,44 @@
 @extends('manager.partials.manager-layout')
 @section("manager_content")
+    <div class="relative w-full h-full">
+        <table class="mt-6 w-full border border-gray-300 bg-white rounded-lg overflow-hidden">
+            <thead class="bg-gray-200">
+                <tr>
+                    <th class="px-4 py-2">Név</th>
+                    <th class="px-4 py-2">Kategória</th>
+                    <th class="px-4 py-2">Ár</th>
+                    <th class="px-4 py-2">Státusz</th> 
+                    <th class="px-4 py-2">Hely</th>
+                    <th class="px-4 py-2">Kép</th>
+                    <th class="px-4 py-2">Műveletek</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($products as $product)
+                <tr class="border-t {{ $product->is_featured ? 'bg-blue-100' : '' }}">
+                    <td class="px-4 py-2">{{ $product->name }}</td>
+                    <td class="px-4 py-2">{{ $product->category }}</td>
+                    <td class="px-4 py-2">{{ $product->price }}</td>
+                    <td class="px-4 py-2">{{ $product->status }}</td>
+                    <td class="px-4 py-2">{{ $product->area->name ?? 'N/A' }}</td>
+                    <td class="px-4 py-2">
+                        @if ($product->photo_url)
+                            <img src="{{ $product->photo_url }}" alt="{{ $product->name }}" class="h-12 w-12 object-cover rounded">
+                        @else
+                            N/A
+                        @endif
+                    </td>
+                    <td class="px-4 py-2">
+                        <button class="bg-yellow-500 text-white px-2 py-1 rounded mr-2" 
+                            onclick="editProduct( {{ $product->product_id }}, '{{ $product->name }}', '{{ $product->category }}', {{ $product->price }}, '{{ $product->status }}', '{{ $product->photo_url }}', {{ $product->is_featured }}, {{ $product->area->area_id }},  @json($product->allergens->pluck('allergen_id')))">Szerkesztés</button>
+                        <button class="bg-red-500 text-white px-2 py-1 rounded" onclick="deleteProduct({{ $product->product_id }}, '{{ $product->name }}')">Törlés</button>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
-    <button id="addProductButton" class="bg-yellow-500 text-white px-2 py-1 rounded mr-2">Hozzáadás</button>
-
-    <table class="mt-6 w-full border border-gray-300 bg-white rounded-lg overflow-hidden">
-        <thead class="bg-gray-200">
-            <tr>
-                <th class="px-4 py-2">Név</th>
-                <th class="px-4 py-2">Kategória</th>
-                <th class="px-4 py-2">Ár</th>
-                <th class="px-4 py-2">Státusz</th> 
-                <th class="px-4 py-2">Hely</th>
-                <th class="px-4 py-2">Kép</th>
-                <th class="px-4 py-2">Műveletek</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($products as $product)
-            <tr class="border-t {{ $product->is_featured ? 'bg-blue-100' : '' }}">
-                <td class="px-4 py-2">{{ $product->name }}</td>
-                <td class="px-4 py-2">{{ $product->category }}</td>
-                <td class="px-4 py-2">{{ $product->price }}</td>
-                <td class="px-4 py-2">{{ $product->status }}</td>
-                <td class="px-4 py-2">{{ $product->area->name ?? 'N/A' }}</td>
-                <td class="px-4 py-2">
-                    @if ($product->photo_url)
-                        <img src="{{ $product->photo_url }}" alt="{{ $product->name }}" class="h-12 w-12 object-cover rounded">
-                    @else
-                        N/A
-                    @endif
-                </td>
-                <td class="px-4 py-2">
-                    <button class="bg-yellow-500 text-white px-2 py-1 rounded mr-2" 
-                        onclick="editProduct( {{ $product->product_id }}, '{{ $product->name }}', '{{ $product->category }}', {{ $product->price }}, '{{ $product->status }}', '{{ $product->photo_url }}', {{ $product->is_featured }}, {{ $product->area->area_id }},  @json($product->allergens->pluck('allergen_id')))">Szerkesztés</button>
-                    <button class="bg-red-500 text-white px-2 py-1 rounded" onclick="deleteProduct({{ $product->product_id }}, '{{ $product->name }}')">Törlés</button>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
     <!-- Modal overlay -->
     <div id="add_product_form_overlay" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative" style="max-height:80vh; overflow-y:auto;">
@@ -198,4 +198,7 @@
                 </form>
             </div>
         </div>
+        <button id="addProductButton" style="position:fixed;bottom:2rem;right:2rem;" class="bg-yellow-500 text-white px-4 py-3 rounded-full shadow-lg z-50 hover:bg-yellow-600 transition-all">
+            Hozzáadás
+        </button>
 @endsection
