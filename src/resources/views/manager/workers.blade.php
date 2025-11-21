@@ -1,11 +1,6 @@
-{{-- /views/manager/workers.blade.php --}}
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Manager oldal') }}
-        </h2>
-    </x-slot>
-    @include('manager.partials.sidebar')
+@extends('manager.partials.manager-layout')
+@section("manager_content")
+
     <div>
         <table class="mt-6 w-full border border-gray-300 rounded-lg overflow-hidden">
             <thead class="bg-gray-200">
@@ -122,4 +117,4 @@
         </div>
     </div>
 
-</x-app-layout>
+@endsection

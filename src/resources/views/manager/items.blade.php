@@ -1,14 +1,9 @@
-{{-- /views/manager/dashboard.blade.php --}}
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Manager oldal') }}
-        </h2>
-    </x-slot>
-    @include('manager.partials.sidebar')
+@extends('manager.partials.manager-layout')
+@section("manager_content")
+
     <button id="addProductButton" class="bg-yellow-500 text-white px-2 py-1 rounded mr-2">Hozzáadás</button>
 
-    <table class="mt-6 w-full border border-gray-300 rounded-lg overflow-hidden">
+    <table class="mt-6 w-full border border-gray-300 bg-white rounded-lg overflow-hidden">
         <thead class="bg-gray-200">
             <tr>
                 <th class="px-4 py-2">Név</th>
@@ -203,4 +198,4 @@
                 </form>
             </div>
         </div>
-</x-app-layout>
+@endsection
