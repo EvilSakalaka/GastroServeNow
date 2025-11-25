@@ -98,6 +98,7 @@ class AdminPageController extends Controller
 
     public function editProduct(ProductEditRequest $request)
     {
+        \Log::info('Termék szerkesztés indítva', $request->all());
         if ($request->validated()) {
             $product = \App\Models\Product::find($request->product_id);
             $product->name = $request->name;
@@ -107,6 +108,7 @@ class AdminPageController extends Controller
             $product->photo_url = $request->photo_url;
             $product->is_featured = $request->is_featured ?? false;
             $product->area_id = $request->area_id;
+            $product->allergens()->sync($request->allergens ?? []);
             $product->save();
         }
         return redirect()->route('manager.items_page');

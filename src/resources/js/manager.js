@@ -45,6 +45,7 @@ $(document).ready(function() {
         $('#edit_product_form #price').val('');
         $('#edit_product_form #photo_url').val('');
         $('#edit_product_form #area').val('');
+        $('#edit_product_form input[type="checkbox"]').prop('checked', false); // Uncheck all checkboxes
         $('#edit_product_form_overlay').addClass('hidden'); 
     });
 
@@ -77,13 +78,13 @@ window.deleteWorker = function(workerId, worker_name) {
 }
 
 window.editProduct = function(p_id, p_name, p_category, p_price, p_status, p_photourl, p_isfeatured, p_area, p_allergens) {
-    console.log("Allergens: ", p_allergens);
+    //console.log("Area", p_area);
     $('#edit_product_form #product_id').val(p_id);
     $('#edit_product_form #name').val(p_name);
     $('#edit_product_form #category').val(p_category);
     $('#edit_product_form #price').val(p_price);
     $('#edit_product_form #photo_url').val(p_photourl);
-    $('#edit_product_form #product_area').val(p_area);
+    $('#edit_product_form #area_id').val(p_area);
     if (p_status === 'unavailable') {
         $('#edit_product_form #status_unavailable').prop('checked', true);
     } else {
@@ -93,6 +94,10 @@ window.editProduct = function(p_id, p_name, p_category, p_price, p_status, p_pho
         $('#edit_product_form #is_featured').prop('checked', true);
     } else {
         $('#edit_product_form #is_featured').prop('checked', false);
+    }
+    // Set allergens
+    for (let allergen of p_allergens) {
+        $('#edit_product_form #Allergen-' + allergen).prop('checked', true);
     }
     $('#edit_product_form_overlay').removeClass('hidden');
 }
