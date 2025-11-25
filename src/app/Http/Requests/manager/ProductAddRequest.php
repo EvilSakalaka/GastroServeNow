@@ -31,4 +31,23 @@ class ProductAddRequest extends FormRequest
             'area_id' => 'required|exists:areas,area_id',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'A termék neve kötelező.',
+            'name.max' => 'A termék neve nem lehet hosszabb, mint 255 karakter.',
+            'category.required' => 'A kategória megadása kötelező.',
+            'category.max' => 'A kategória nem lehet hosszabb, mint 255 karakter.',
+            'price.required' => 'Az ár megadása kötelező.',
+            'price.numeric' => 'Az árnak számnak kell lennie.',
+            'price.min' => 'Az ár nem lehet kisebb, mint 0.',
+            'status.required' => 'A státusz megadása kötelező.',
+            'status.in' => 'A státusznak elérhető vagy nem elérhető értékűnek kell lennie.',
+            'photo_url.url' => 'A fotó URL-nek érvényes URL-nek kell lennie.',
+            'photo_url.max' => 'A fotó URL nem lehet hosszabb, mint 255 karakter.',
+            'area_id.required' => 'A terület megadása kötelező.',
+            'area_id.exists' => 'A kiválasztott terület érvénytelen.',
+        ];
+    }
 }

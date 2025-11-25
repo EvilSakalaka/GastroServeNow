@@ -30,4 +30,22 @@ class WorkerAddRequest extends FormRequest
             'status' => 'required|in:active,inactive',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'A név megadása kötelező.',
+            'name.max' => 'A név nem lehet hosszabb, mint 255 karakter.',
+            'username.required' => 'A felhasználónév megadása kötelező.',
+            'username.max' => 'A felhasználónév nem lehet hosszabb, mint 50 karakter.',
+            'email.required' => 'Az email cím megadása kötelező.',
+            'email.email' => 'Az email címnek érvényes formátumúnak kell lennie.',
+            'password.required' => 'A jelszó megadása kötelező.',
+            'password.min' => 'A jelszónak legalább 8 karakter hosszúnak kell lennie.',
+            'role.required' => 'A szerepkör megadása kötelező.',
+            'role.in' => 'A szerepkörnek manager, waiter, chef vagy bartender értékűnek kell lennie.',
+            'status.required' => 'Az állapot megadása kötelező.',
+            'status.in' => 'Az állapotnak active vagy inactive értékűnek kell lennie.',
+        ];
+    }
 }

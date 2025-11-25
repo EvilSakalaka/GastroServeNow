@@ -17,7 +17,7 @@ class ProductSeeder extends Seeder
             'category' => 'Étel',
             'price' => 1200.00,
             'status' => 'available',
-            'photo_url' => 'https://example.com/photos/pizza_margherita.jpg',
+            'photo_url' => 'https://cookingitalians.com/wp-content/uploads/2024/11/Margherita-Pizza.jpg',
             'is_featured' => true,
             'area_id' => 1, // kitchen
         ]);
@@ -27,7 +27,7 @@ class ProductSeeder extends Seeder
             'category' => 'Ital',
             'price' => 400.00,
             'status' => 'available',
-            'photo_url' => 'https://example.com/photos/coca_cola.jpg',
+            'photo_url' => 'https://pngimg.com/uploads/cocacola/cocacola_PNG5.png',
             'is_featured' => false,
             'area_id' => 2, // bar
         ]);
