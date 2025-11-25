@@ -75,7 +75,7 @@ class AdminPageController extends Controller
     }
     public function __invoke(Request $request)
     {
-        return view('manager.dashboard');
+        return redirect()->route('manager.items_page');
     }
 
     public function addProduct(ProductAddRequest $request)
