@@ -8,6 +8,8 @@ use App\Http\Controllers\Bartender\DashboardController as BartenderDashboard;
 use App\Http\Controllers\Manager\AdminPageController as ManagerAdminPage;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Waiter\OrderController;
+use App\Http\Controllers\Chef\OrderItemStatusController as ChefOrderItemStatusController;
+use App\Http\Controllers\Bartender\OrderItemStatusController as BartenderOrderItemStatusController;
 
 Route::get('/', function () {
     if (Auth::guest()) {
@@ -64,10 +66,18 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('role:chef,manager')
         ->name('chef.dashboard');
 
+    Route::patch('/chef/order-items/{orderItem}/status', [ChefOrderItemStatusController::class, 'update'])
+        ->middleware('role:chef,manager')
+        ->name('chef.order-items.update-status');
+
     // A PULTOS oldala (Csak 'bartender' ÉS 'manager' láthatja)
     Route::get('/bartender/dashboard', BartenderDashboard::class)
         ->middleware('role:bartender,manager')
         ->name('bartender.dashboard');
+    // Státusz frissítése a rendelési tételnek a pultos által
+    Route::patch('/bartender/order-items/{orderItem}/status', [BartenderOrderItemStatusController::class, 'update'])
+        ->middleware('role:bartender,manager')
+        ->name('bartender.order-items.update-status');
 
     // A MANAGER admin oldala (CSAK 'manager' láthatja)
     Route::prefix('manager')->group(function () {
@@ -84,9 +94,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/add-product', [ManagerAdminPage::class, 'addProduct'])->name('manager.add_product');
         Route::post('/edit-product', [ManagerAdminPage::class, 'editProduct'])->name('manager.edit_product');
         Route::post('/delete-product', [ManagerAdminPage::class, 'deleteProduct'])->name('manager.delete_product');
-        
+
     })->middleware('role:manager');
-    
+
         Route::patch('/waiter/tables/{table}/make-reserved', [WaiterDashboard::class, 'makeReserved'])
         ->middleware('role:waiter,manager')
         ->name('waiter.tables.makeReserved');
@@ -106,9 +116,9 @@ Route::middleware(['auth'])->group(function () {
      Route::get('/waiter/orders/success/{order}', [OrderController::class, 'showSuccess'])
     ->middleware('role:waiter,manager')
     ->name('waiter.orders.success');
-    
 
-        
+
+
 });
 
 require __DIR__.'/auth.php';
