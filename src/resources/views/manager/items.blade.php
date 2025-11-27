@@ -44,7 +44,12 @@
         <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative" style="max-height:80vh; overflow-y:auto;">
             <h3 class="text-lg font-bold mb-4">Termék hozzáadása</h3>
             <form id="add_product_form" method="post" action="{{ route('manager.add_product') }}">
-                @if ($errors->any())
+                @if ($errors->any() && !old('product_id'))
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            document.getElementById('add_product_form_overlay').classList.remove('hidden');
+                        });
+                    </script>
                     <div class="mb-4">
                         <ul class="list-disc list-inside text-red-600 text-sm">
                             @foreach ($errors->all() as $error)
@@ -114,7 +119,12 @@
         <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative" style="max-height:80vh; overflow-y:auto;">
             <h3 class="text-lg font-bold mb-4">Termék szerkesztése</h3>
             <form id="edit_product_form" action="{{ route('manager.edit_product') }}" method="post">
-                @if ($errors->any())
+                @if ($errors->any() && old('product_id'))
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            document.getElementById('edit_product_form_overlay').classList.remove('hidden');
+                        });
+                    </script>
                     <div class="mb-4">
                         <ul class="list-disc list-inside text-red-600 text-sm">
                             @foreach ($errors->all() as $error)
