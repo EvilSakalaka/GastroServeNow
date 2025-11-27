@@ -106,6 +106,20 @@ Route::middleware(['auth'])->group(function () {
      Route::get('/waiter/orders/success/{order}', [OrderController::class, 'showSuccess'])
     ->middleware('role:waiter,manager')
     ->name('waiter.orders.success');
+
+    Route::post('/waiter/orders/{order}/add-item', [OrderController::class, 'addToExistingOrder'])
+    ->name('waiter.orders.add-item');
+
+    
+    Route::get('/waiter/orders/{order}/add-item', [OrderController::class, 'addToExistingOrder'])
+        ->middleware('role:waiter,manager')
+        ->name('waiter.orders.add-item');
+
+    // Meglévő rendeléshez tétel hozzáadása - POST (adatok elmenti)
+    Route::post('/waiter/orders/{order}/add-item', [OrderController::class, 'storeAddedItems'])
+        ->middleware('role:waiter,manager')
+        ->name('waiter.orders.store-add-item');
+
     
 
         
