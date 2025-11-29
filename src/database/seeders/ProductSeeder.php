@@ -41,5 +41,7 @@ class ProductSeeder extends Seeder
             'is_featured' => false,
             'area_id' => 1, // kitchen
         ]);
+
+        
     }
 }
