@@ -43,7 +43,7 @@ class ProductSeeder extends Seeder
         ]);
 
         \App\Models\Product::create([
-            'name' => 'Falusi Húsleves',
+            'name' => 'Falusi TyúkHúsleves - Nagymamánk receptje szerint',
             'category' => 'Étel',
             'price' => 2250.00,
             'status' => 'available',
@@ -137,27 +137,47 @@ class ProductSeeder extends Seeder
             'category' => 'ital',
             'price' => 500.00,
             'status' => 'available',
-            'photo_url' => '',
+            'photo_url' => 'https://coolcoffe.cdn.shoprenter.hu/custom/coolcoffe/image/cache/w0h0q80np1/Blog/Recept/tokeletes-eszpresszo/tokeletes-presszokave-coolcoffee.hu.jpg?v=null.1684988111',
             'is_featured' => false,
             'area_id' => 2, // bar
         ]);
 
         \App\Models\Product::create([
-            'name' => 'Sör (0,5L)',
+            'name' => 'Derilium Red',
             'category' => 'ital',
             'price' => 800.00,
             'status' => 'available',
-            'photo_url' => '',
+            'photo_url' => 'https://carringtonswines.co.uk/wp-content/uploads/2024/10/image-11-scaled.jpg',
             'is_featured' => false,
             'area_id' => 2, // bar
         ]);
 
         \App\Models\Product::create([
-            'name' => 'Bor (Vörös)',
+            'name' => 'Vörösbor',
             'category' => 'ital',
             'price' => 1200.00,
             'status' => 'available',
-            'photo_url' => '',
+            'photo_url' => 'https://vinissimo.hu/wp-content/uploads/2024/10/Vorosbor.png',
+            'is_featured' => false,
+            'area_id' => 2, // bar
+        ]);
+
+        \App\Models\Product::create([
+            'name' => 'Duvel',
+            'category' => 'ital',
+            'price' => 1100.00,
+            'status' => 'available',
+            'photo_url' => 'https://www.purvisbeer.com.au/cdn/shop/products/image_2501be3a-8650-4864-af27-8688e3cb2fd7.jpg?v=1617279876&width=1920',
+            'is_featured' => false,
+            'area_id' => 2, // bar
+        ]);
+
+        \App\Models\Product::create([
+            'name' => 'Guinness',
+            'category' => 'ital',
+            'price' => 1100.00,
+            'status' => 'available',
+            'photo_url' => 'https://images.ctfassets.net/8nq3bs98o7cv/6LRqJpUgETL9Ci5dHSLsPH/e89570af4fd0d820a516b88da023abaa/eyJidWNrZXQiOiJzZXJ2ZXJsZXNzaW1naG5kbHItcHJkIiwia2V5IjoiRENIL2ltYWdlL2pwZWcvMTAyMzUwNDgvR3Vpbm5lc3NfQmFja1RvVGhlUHViXzA4NjRfUy5q',
             'is_featured' => false,
             'area_id' => 2, // bar
         ]);

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\MenuController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Waiter\DashboardController as WaiterDashboard;
 use App\Http\Controllers\Chef\DashboardController as ChefDashboard;
@@ -15,6 +16,8 @@ Route::get('/', function () {
     }
     return redirect()->route('dashboard');
 });
+
+Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
 
 //Route::get('/dashboard', function () {
 //   return view('dashboard');
