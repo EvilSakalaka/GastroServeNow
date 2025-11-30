@@ -56,7 +56,42 @@
                     <!-- ÖSSZES TERMÉK -->
                     <div x-show="activeTab === 'all'">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <template x-for="product in products" :key="product.product_id">
+                            <!-- KIEMELT TERMÉKEK ELŐRE -->
+                            <template x-for="product in products.filter(p => p.is_featured)" :key="product.product_id">
+                                <div class="bg-white border-2 border-red-400 rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 ring-2 ring-red-100">
+                                    <!-- KÉP -->
+                                    <div class="relative h-56 bg-gradient-to-br from-gold-50 to-gray-100 overflow-hidden">
+                                        <img 
+                                            x-show="product.photo_url"
+                                            :src="product.photo_url" 
+                                            :alt="product.name"
+                                            class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                            loading="lazy">
+                                        <div x-show="!product.photo_url" class="flex items-center justify-center w-full h-full">
+                                            <svg class="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    <!-- TARTALOM -->
+                                    <div class="p-6">
+                                        <h3 class="text-xl font-bold text-gray-900 mb-2" x-text="product.name"></h3>
+                                        
+                                        <!-- KATEGÓRIA -->
+                                        <p class="text-sm text-gray-500 mb-3 hidden" x-text="product.category"></p>
+                                        
+                                        <!-- ÁR + KIEMELT BADGE -->
+                                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                                            <span class="text-2xl font-bold text-gold-600" x-text="Number(product.price).toLocaleString('hu-HU') + ' Ft'"></span>
+                                            <span class="inline-block px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-semibold">⭐ Kiemelt</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- NORMÁL TERMÉKEK -->
+                            <template x-for="product in products.filter(p => !p.is_featured)" :key="product.product_id">
                                 <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                                     <!-- KÉP -->
                                     <div class="relative h-56 bg-gradient-to-br from-gold-50 to-gray-100 overflow-hidden">
@@ -78,14 +113,11 @@
                                         <h3 class="text-xl font-bold text-gray-900 mb-2" x-text="product.name"></h3>
                                         
                                         <!-- KATEGÓRIA -->
-                                        <p class="text-sm text-gray-500 mb-3" x-text="product.category"></p>
+                                        <p class="text-sm text-gray-500 mb-3 hidden" x-text="product.category"></p>
                                         
-                                        <!-- ÁR + KIEMELT BADGE -->
+                                        <!-- ÁR -->
                                         <div class="flex items-center justify-between pt-4 border-t border-gray-100">
                                             <span class="text-2xl font-bold text-gold-600" x-text="Number(product.price).toLocaleString('hu-HU') + ' Ft'"></span>
-                                            <template x-if="product.is_featured">
-                                                <span class="inline-block px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-semibold">⭐ Kiemelt</span>
-                                            </template>
                                         </div>
                                     </div>
                                 </div>
@@ -96,7 +128,35 @@
                     <!-- CSAK ÉTELEK -->
                     <div x-show="activeTab === 'food'" style="display: none;">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <template x-for="product in food" :key="product.product_id">
+                            <!-- KIEMELT ÉTELEK ELŐRE -->
+                            <template x-for="product in food.filter(p => p.is_featured)" :key="product.product_id">
+                                <div class="bg-white border-2 border-red-400 rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 ring-2 ring-red-100">
+                                    <div class="relative h-56 bg-gradient-to-br from-orange-50 to-gray-100 overflow-hidden">
+                                        <img 
+                                            x-show="product.photo_url"
+                                            :src="product.photo_url" 
+                                            :alt="product.name"
+                                            class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                            loading="lazy">
+                                        <div x-show="!product.photo_url" class="flex items-center justify-center w-full h-full">
+                                            <svg class="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="p-6">
+                                        <h3 class="text-xl font-bold text-gray-900 mb-2" x-text="product.name"></h3>
+                                        <p class="text-sm text-gray-500 mb-3 hidden" x-text="product.category"></p>
+                                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                                            <span class="text-2xl font-bold text-orange-600" x-text="Number(product.price).toLocaleString('hu-HU') + ' Ft'"></span>
+                                            <span class="inline-block px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-semibold">⭐ Kiemelt</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- NORMÁL ÉTELEK -->
+                            <template x-for="product in food.filter(p => !p.is_featured)" :key="product.product_id">
                                 <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                                     <div class="relative h-56 bg-gradient-to-br from-orange-50 to-gray-100 overflow-hidden">
                                         <img 
@@ -113,10 +173,9 @@
                                     </div>
                                     <div class="p-6">
                                         <h3 class="text-xl font-bold text-gray-900 mb-2" x-text="product.name"></h3>
-                                        <p class="text-sm text-gray-500 mb-3" x-text="product.category"></p>
+                                        <p class="text-sm text-gray-500 mb-3 hidden" x-text="product.category"></p>
                                         <div class="flex items-center justify-between pt-4 border-t border-gray-100">
                                             <span class="text-2xl font-bold text-orange-600" x-text="Number(product.price).toLocaleString('hu-HU') + ' Ft'"></span>
-                                            <span class="inline-block px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold">🍽️ Étel</span>
                                         </div>
                                     </div>
                                 </div>
@@ -127,7 +186,35 @@
                     <!-- CSAK ITALOK -->
                     <div x-show="activeTab === 'drinks'" style="display: none;">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <template x-for="product in drinks" :key="product.product_id">
+                            <!-- KIEMELT ITALOK ELŐRE -->
+                            <template x-for="product in drinks.filter(p => p.is_featured)" :key="product.product_id">
+                                <div class="bg-white border-2 border-red-400 rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 ring-2 ring-red-100">
+                                    <div class="relative h-56 bg-gradient-to-br from-blue-50 to-gray-100 overflow-hidden">
+                                        <img 
+                                            x-show="product.photo_url"
+                                            :src="product.photo_url" 
+                                            :alt="product.name"
+                                            class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                            loading="lazy">
+                                        <div x-show="!product.photo_url" class="flex items-center justify-center w-full h-full">
+                                            <svg class="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="p-6">
+                                        <h3 class="text-xl font-bold text-gray-900 mb-2" x-text="product.name"></h3>
+                                        <p class="text-sm text-gray-500 mb-3 hidden" x-text="product.category"></p>
+                                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                                            <span class="text-2xl font-bold text-blue-600" x-text="Number(product.price).toLocaleString('hu-HU') + ' Ft'"></span>
+                                            <span class="inline-block px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-semibold">⭐ Kiemelt</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- NORMÁL ITALOK -->
+                            <template x-for="product in drinks.filter(p => !p.is_featured)" :key="product.product_id">
                                 <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                                     <div class="relative h-56 bg-gradient-to-br from-blue-50 to-gray-100 overflow-hidden">
                                         <img 
@@ -144,10 +231,9 @@
                                     </div>
                                     <div class="p-6">
                                         <h3 class="text-xl font-bold text-gray-900 mb-2" x-text="product.name"></h3>
-                                        <p class="text-sm text-gray-500 mb-3" x-text="product.category"></p>
+                                        <p class="text-sm text-gray-500 mb-3 hidden" x-text="product.category"></p>
                                         <div class="flex items-center justify-between pt-4 border-t border-gray-100">
                                             <span class="text-2xl font-bold text-blue-600" x-text="Number(product.price).toLocaleString('hu-HU') + ' Ft'"></span>
-                                            <span class="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">🥤 Ital</span>
                                         </div>
                                     </div>
                                 </div>

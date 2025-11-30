@@ -181,6 +181,48 @@ class ProductSeeder extends Seeder
             'is_featured' => false,
             'area_id' => 2, // bar
         ]);
+        \App\Models\Product::create([
+            'name' => 'Cappuccino',
+            'category' => 'ital',
+            'price' => 700.00,
+            'status' => 'available',
+            'photo_url' => 'https://www.livingnorth.com/images/media/articles/food-and-drink/eat-and-drink/coffee.png?',
+            'is_featured' => false,
+            'area_id' => 2, // bar
+        ]);
+
+        \App\Models\Product::create([
+            'name' => 'Tequila Sunrise',
+            'category' => 'ital',
+            'price' => 1700.00,
+            'status' => 'available',
+            'photo_url' => 'https://mixertanfolyam.hu/wp-content/uploads/2018/09/tequila-sunrise.jpg',
+            'is_featured' => true,
+            'area_id' => 2, // bar
+        ]);
+
+        \App\Models\Product::create([
+            'name' => 'Sex On the Beach',
+            'category' => 'ital',
+            'price' => 1900.00,
+            'status' => 'available',
+            'photo_url' => 'https://hips.hearstapps.com/hmg-prod/images/sex-on-the-beach-index-6442f7c402c66.jpg?crop=0.6666666666666666xw:1xh;center,top&resize=1200:*',
+            'is_featured' => true,
+            'area_id' => 2, // bar
+        ]);
+
+        \App\Models\Product::create([
+            'name' => 'Cuba Libre',
+            'category' => 'ital',
+            'price' => 1900.00,
+            'status' => 'available',
+            'photo_url' => 'https://barnesandbrown.co/cdn/shop/articles/Artboard_5.jpg?v=1715917314',
+            'is_featured' => true,
+            'area_id' => 2, // bar
+        ]);
+
+
+
 
 
         
