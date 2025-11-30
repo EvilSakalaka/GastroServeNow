@@ -12,8 +12,8 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <!-- PUBLIKUS ÉTLAP - MINDENKINEK -->
-                    @if (!Auth::check() || Auth::user()->role == 'waiter' || Auth::user()->role == 'manager')
+                    <!-- PUBLIKUS ÉTLAP - CSAK VENDÉGEK (bejelentkezés nélkül) -->
+                    @if (!Auth::check())
                         <x-nav-link :href="route('menu.index')" :active="request()->routeIs('menu.index')">
                             {{ __('Étlap') }}
                         </x-nav-link>
@@ -99,10 +99,12 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <!-- PUBLIKUS ÉTLAP -  -->
-            <x-responsive-nav-link :href="route('menu.index')" :active="request()->routeIs('menu.index')">
-                {{ __('Étlap') }}
-            </x-responsive-nav-link>
+            <!-- PUBLIKUS ÉTLAP - CSAK VENDÉGEK (mobilon) -->
+            @if (!Auth::check())
+                <x-responsive-nav-link :href="route('menu.index')" :active="request()->routeIs('menu.index')">
+                    {{ __('Étlap') }}
+                </x-responsive-nav-link>
+            @endif
 
             @if (Auth::check() && Auth::user()->role == 'manager')
                 <x-responsive-nav-link :href="route('waiter.dashboard')" :active="request()->routeIs('waiter.dashboard')">

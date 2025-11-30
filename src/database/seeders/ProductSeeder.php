@@ -43,7 +43,7 @@ class ProductSeeder extends Seeder
         ]);
 
         \App\Models\Product::create([
-            'name' => 'Falusi TyúkHúsleves - Nagymamánk receptje szerint',
+            'name' => 'Falusi TyúkHúsleves',
             'category' => 'Étel',
             'price' => 2250.00,
             'status' => 'available',
