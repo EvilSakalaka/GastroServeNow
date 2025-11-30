@@ -6,11 +6,15 @@
     }
 </style>
 
+
+
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gold-700 leading-tight">
             Új rendelés felvétele ({{ $guest_session->table_number }}. asztal)
         </h2>
     </x-slot>
+
+
 
     <div class="py-12" x-data="orderData()" x-init="init()">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -38,6 +42,8 @@
                     </div>
                 </div>
 
+
+
                 {{-- DROPDOWN LISTA - HIDDEN WHEN SUMMARY TAB OPEN --}}
                 <div x-show="openDropdown && tab !== 'summary'" @click.away="openDropdown = false" 
                     class="fixed bg-white border border-gray-300 rounded shadow-2xl z-50 w-56 max-h-96 overflow-y-auto"
@@ -63,6 +69,8 @@
                     </div>
                 </div>
 
+
+
                 <form method="POST" action="{{ route('waiter.orders.store') }}">
                     @csrf
                     <input type="hidden" name="guest_session_id" value="{{ $guest_session->session_id }}">
@@ -70,34 +78,71 @@
                     <input type="hidden" name="total_amount" x-bind:value="totalAmount">
                     <input type="hidden" name="tip_percent" x-bind:value="tipPercent">
 
+
+
                     {{-- TARTALMI RÉSZ --}}
                     <div class="p-6">
+
+
+
+                       
                         
                         {{-- === ÉTEL FÜL === --}}
                         <div x-show="tab === 'food'">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Ételek</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <h3 class="text-lg font-medium text-gray-900 mb-6">Ételek</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 <template x-for="product in filteredFood()" :key="product.product_id">
-                                    <div class="border rounded-lg p-4 flex justify-between items-center hover:shadow-md transition">
-                                        <div class="flex items-center space-x-2 flex-1">
-                                            <button type="button" @click="openModal(product)" class="flex-shrink-0 w-6 h-6 rounded-full bg-gold-100 text-gold-600 hover:bg-gold-200 flex items-center justify-center font-bold text-sm">i</button>
-                                            <div class="flex-1">
-                                                <div class="font-medium text-gray-900" x-text="product.name"></div>
-                                                <div class="text-sm text-gray-600" x-text="product.price + ' Ft'"></div>
-                                                <div class="mt-1 flex flex-wrap gap-1">
-                                                    <template x-if="product.allergens.length > 0">
-                                                        <template x-for="a in product.allergens" :key="a.allergen_id">
-                                                            <span class="inline-block text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded" x-text="a.name"></span>
-                                                        </template>
-                                                    </template>
-                                                    <span x-show="product.allergens.length === 0" class="text-xs text-green-600">Allergénmentes</span>
-                                                </div>
+                                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+                                        
+                                        {{-- KÉP TERÜLET - NÉGYZET ALAKÚ (PADDING TRICK) --}}
+                                        <div class="relative w-full bg-gradient-to-br from-gold-50 to-gray-100 overflow-hidden" style="padding-bottom: 100%;">
+                                            <img 
+                                                x-show="product.photo_url"
+                                                :src="product.photo_url" 
+                                                :alt="product.name"
+                                                class="absolute inset-0 w-full h-full object-cover hover:scale-110 transition-transform duration-300">
+                                            <div x-show="!product.photo_url" class="absolute inset-0 flex items-center justify-center w-full h-full">
+                                                <svg class="w-20 h-20 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                </svg>
                                             </div>
                                         </div>
-                                        <div class="ml-4 flex items-center space-x-2">
-                                            <button type="button" x-show="getQuantity(product.product_id) > 0" @click="removeFromCart(product.product_id)" class="bg-gold-500 text-white w-8 h-8 rounded-full text-lg font-bold hover:bg-gold-700">-</button>
-                                            <span x-show="getQuantity(product.product_id) > 0" x-text="getQuantity(product.product_id)" class="w-8 text-center font-medium text-lg text-gold-700"></span>
-                                            <button type="button" @click="addToCart(product)" class="bg-gold-500 text-white w-8 h-8 rounded-full text-lg font-bold hover:bg-gold-700">+</button>
+
+
+                                        {{-- TARTALOM TERÜLET --}}
+                                        <div class="p-4 flex flex-col h-full">
+                                            {{-- ÉTEL NEVE, ÁR, INFO GOMB --}}
+                                            <div class="flex items-start justify-between mb-3">
+                                                <div class="flex-1">
+                                                    <div class="font-semibold text-gray-900 text-base" x-text="product.name"></div>
+                                                    <div class="text-lg font-bold text-gold-600 mt-1" x-text="product.price + ' Ft'"></div>
+                                                </div>
+                                                <button type="button" @click="openModal(product)" class="flex-shrink-0 ml-2 w-6 h-6 rounded-full bg-gold-100 text-gold-600 hover:bg-gold-200 flex items-center justify-center font-bold text-xs">i</button>
+                                            </div>
+
+
+                                            {{-- ALLERGÉNEK --}}
+                                            <div class="mb-4">
+                                                <div class="flex flex-wrap gap-1">
+                                                    <template x-if="product.allergens.length > 0">
+                                                        <template x-for="a in product.allergens" :key="a.allergen_id">
+                                                            <span class="inline-block text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-medium" x-text="a.name"></span>
+                                                        </template>
+                                                    </template>
+                                                    <span x-show="product.allergens.length === 0" class="inline-block text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full font-medium">Allergénmentes</span>
+                                                </div>
+                                            </div>
+
+                                            {{-- MENNYISÉG + GOMBOK --}}
+                                            <div class="flex items-center justify-between pt-3 border-t border-gray-200">
+                                                <div class="flex-1">
+                                                    <span x-show="getQuantity(product.product_id) > 0" class="text-sm font-medium text-gray-700">Mennyiség: <span x-text="getQuantity(product.product_id)" class="font-bold text-gold-700"></span></span>
+                                                </div>
+                                                <div class="flex items-center space-x-2">
+                                                    <button type="button" x-show="getQuantity(product.product_id) > 0" @click="removeFromCart(product.product_id)" class="bg-red-500 text-white w-8 h-8 rounded-full text-sm font-bold hover:bg-red-600 transition">−</button>
+                                                    <button type="button" @click="addToCart(product)" class="bg-gold-500 text-white w-8 h-8 rounded-full text-sm font-bold hover:bg-gold-600 transition">+</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </template>
@@ -106,34 +151,67 @@
                         
                         {{-- === ITAL FÜL === --}}
                         <div x-show="tab === 'drinks'" style="display: none;">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Italok</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <h3 class="text-lg font-medium text-gray-900 mb-6">Italok</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 <template x-for="product in filteredDrinks()" :key="product.product_id">
-                                    <div class="border rounded-lg p-4 flex justify-between items-center hover:shadow-md transition">
-                                        <div class="flex items-center space-x-2 flex-1">
-                                            <button type="button" @click="openModal(product)" class="flex-shrink-0 w-6 h-6 rounded-full bg-gold-100 text-gold-600 hover:bg-gold-200 flex items-center justify-center font-bold text-sm">i</button>
-                                            <div class="flex-1">
-                                                <div class="font-medium text-gray-900" x-text="product.name"></div>
-                                                <div class="text-sm text-gray-600" x-text="product.price + ' Ft'"></div>
-                                                <div class="mt-1 flex flex-wrap gap-1">
-                                                    <template x-if="product.allergens.length > 0">
-                                                        <template x-for="a in product.allergens" :key="a.allergen_id">
-                                                            <span class="inline-block text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded" x-text="a.name"></span>
-                                                        </template>
-                                                    </template>
-                                                    <span x-show="product.allergens.length === 0" class="text-xs text-green-600">Allergénmentes</span>
-                                                </div>
+                                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+                                        
+                                        {{-- KÉP TERÜLET - NÉGYZET ALAKÚ (PADDING TRICK) --}}
+                                        <div class="relative w-full bg-gradient-to-br from-gold-50 to-gray-100 overflow-hidden" style="padding-bottom: 100%;">
+                                            <img 
+                                                x-show="product.photo_url"
+                                                :src="product.photo_url" 
+                                                :alt="product.name"
+                                                class="absolute inset-0 w-full h-full object-cover hover:scale-110 transition-transform duration-300">
+                                            <div x-show="!product.photo_url" class="absolute inset-0 flex items-center justify-center w-full h-full">
+                                                <svg class="w-20 h-20 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                </svg>
                                             </div>
                                         </div>
-                                        <div class="ml-4 flex items-center space-x-2">
-                                            <button type="button" x-show="getQuantity(product.product_id) > 0" @click="removeFromCart(product.product_id)" class="bg-gold-500 text-white w-8 h-8 rounded-full text-lg font-bold hover:bg-gold-700">-</button>
-                                            <span x-show="getQuantity(product.product_id) > 0" x-text="getQuantity(product.product_id)" class="w-8 text-center font-medium text-lg text-gold-700"></span>
-                                            <button type="button" @click="addToCart(product)" class="bg-gold-500 text-white w-8 h-8 rounded-full text-lg font-bold hover:bg-gold-700">+</button>
+
+
+                                        {{-- TARTALOM TERÜLET --}}
+                                        <div class="p-4 flex flex-col h-full">
+                                            {{-- ITAL NEVE, ÁR, INFO GOMB --}}
+                                            <div class="flex items-start justify-between mb-3">
+                                                <div class="flex-1">
+                                                    <div class="font-semibold text-gray-900 text-base" x-text="product.name"></div>
+                                                    <div class="text-lg font-bold text-gold-600 mt-1" x-text="product.price + ' Ft'"></div>
+                                                </div>
+                                                <button type="button" @click="openModal(product)" class="flex-shrink-0 ml-2 w-6 h-6 rounded-full bg-gold-100 text-gold-600 hover:bg-gold-200 flex items-center justify-center font-bold text-xs">i</button>
+                                            </div>
+
+
+                                            {{-- ALLERGÉNEK --}}
+                                            <div class="mb-4">
+                                                <div class="flex flex-wrap gap-1">
+                                                    <template x-if="product.allergens.length > 0">
+                                                        <template x-for="a in product.allergens" :key="a.allergen_id">
+                                                            <span class="inline-block text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-medium" x-text="a.name"></span>
+                                                        </template>
+                                                    </template>
+                                                    <span x-show="product.allergens.length === 0" class="inline-block text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full font-medium">Allergénmentes</span>
+                                                </div>
+                                            </div>
+
+                                            {{-- MENNYISÉG + GOMBOK – MINDIG LENT, JOBB OLDALT A GOMBOK --}}
+                                            <div class="flex items-center justify-between pt-3 border-t border-gray-200">
+                                                <div class="flex-1">
+                                                    <span x-show="getQuantity(product.product_id) > 0" class="text-sm font-medium text-gray-700">Mennyiség: <span x-text="getQuantity(product.product_id)" class="font-bold text-gold-700"></span></span>
+                                                </div>
+                                                <div class="flex items-center space-x-2">
+                                                    <button type="button" x-show="getQuantity(product.product_id) > 0" @click="removeFromCart(product.product_id)" class="bg-red-500 text-white w-8 h-8 rounded-full text-sm font-bold hover:bg-red-600 transition">−</button>
+                                                    <button type="button" @click="addToCart(product)" class="bg-gold-500 text-white w-8 h-8 rounded-full text-sm font-bold hover:bg-gold-600 transition">+</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </template>
                             </div>
                         </div>
+
+
 
                         {{-- === ÖSSZESÍTŐ FÜL === --}}
                         <div x-show="tab === 'summary'" style="display: none;">
@@ -158,15 +236,39 @@
                                         </li>
                                     </template>
                                 </ul>
-                                <div class="mt-8 border-t border-gray-200 pt-6">
-                                    <div class="flex justify-between text-sm text-gray-600"><p>Részösszeg</p><p class="font-medium" x-text="subtotal.toFixed(0) + ' Ft'"></p></div>
-                                    <div class="flex justify-between items-center text-sm text-gray-600 mt-2"><p>Borravaló (%)</p><input type="number" x-model.number="tipPercent" min="0" max="100" class="w-24 border-gray-300 rounded-md shadow-sm text-right focus:ring-gold-500 focus:border-gold-500"></div>
+                               
+                                                       {{-- BORRAVALÓ SZELEKTOR --}}
+                                        <div x-show="tab === 'summary'" class="border-t pt-4">
+                                            <label class="block text-sm font-semibold text-gray-700 mb-3">Borravaló:</label>
+                                            <div class="flex gap-3 justify-center flex-wrap mb-4">
+                                                @foreach([0, 5, 10] as $tip)
+                                                    <button 
+                                                        type="button"
+                                                        @click="tipPercent = {{ $tip }}"
+                                                        :class="{ 
+                                                            'bg-gold-500 text-white': tipPercent === {{ $tip }},
+                                                            'bg-gray-200 text-gray-700 hover:bg-gray-300': tipPercent !== {{ $tip }}
+                                                        }"
+                                                        class="px-4 py-2 rounded-lg font-medium transition">
+                                                        {{ $tip }}% 
+                                                    </button>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        {{-- Az input form-ban --}}
+                                    <input type="hidden" name="tip_percent" x-bind:value="tipPercent">
                                     <div class="flex justify-between text-sm text-gray-600 mt-2"><p>Borravaló (Ft)</p><p class="font-medium" x-text="tipAmount.toFixed(0) + ' Ft'"></p></div>
+                                    
                                     <div class="flex justify-between text-lg font-bold text-gray-900 mt-4 pt-4 border-t border-gray-200"><p>Végösszeg</p><p x-text="totalAmount.toFixed(0) + ' Ft'"></p></div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+
+
+
+        
                 
                     {{-- LÁBLÉC ÉS GOMBOK --}}
                     <div class="bg-gray-50 px-6 py-4 flex justify-end space-x-3" x-cloak>
@@ -174,6 +276,7 @@
                         <button type="submit" x-show="tab === 'summary' && cart.length > 0" class="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700">Rendelés leadása</button>
                         <button type="button" x-show="tab !== 'summary'" @click="tab = 'summary'" class="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gold-500 hover:bg-gold-700">Tovább az összesítőhöz</button>
                     </div>
+
 
         {{-- === ALLERGIA MODAL === --}}
         <div x-show="isModalOpen" x-transition class="fixed z-10 inset-0 overflow-y-auto" style="display: none;">
@@ -208,7 +311,12 @@
                 </div>
             </div>
         </div>
+                </form>
+            </div>
+        </div>
     </div>
+
+
 
     <script>
         function orderData() {

@@ -123,6 +123,11 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('role:waiter,manager')
         ->name('waiter.orders.store-add-item');
 
+    Route::get('/waiter/orders/payment-request/{order_id}', [OrderController::class, 'showPaymentRequest'])
+    ->middleware('role:waiter,manager')
+    ->name('waiter.orders.payment-request');
+
+
     
 
         

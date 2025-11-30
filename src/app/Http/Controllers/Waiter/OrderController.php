@@ -170,4 +170,14 @@ class OrderController extends Controller
             }
 
             
+
+            
+            
+                public function showPaymentRequest($order_id)
+                {
+                    $order = Order::findOrFail($order_id);
+                    return view('waiter.orders.payment-request', ['order' => $order]);
+                }
+
+            
 }

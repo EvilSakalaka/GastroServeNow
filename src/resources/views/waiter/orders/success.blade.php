@@ -92,7 +92,7 @@
 
                 {{-- Műveleti gombok --}}
                 <div class="bg-white px-6 py-4 flex justify-between items-center border-t border-gray-200">
-                    <a href="{{ route('waiter.dashboard') }}" class="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gold-500 hover:bg-gold-700 transition">
+                    <a href="{{ route('waiter.orders.payment-request', $order->order_id) }}" class="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gold-500 hover:bg-gold-700 transition">
                          Fizetés
                      </a>
                     
