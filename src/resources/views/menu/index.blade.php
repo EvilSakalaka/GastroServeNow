@@ -7,7 +7,7 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-3xl text-gold-700 leading-tight">
-            ✨ Étlapunk
+            Étlapunk
         </h2>
     </x-slot>
 
@@ -38,14 +38,14 @@
                             @click="activeTab = 'food'" 
                             :class="{ 'border-gold-500 text-gold-700 bg-white': activeTab === 'food', 'border-transparent text-gray-500': activeTab !== 'food' }" 
                             class="whitespace-nowrap py-4 px-4 border-b-2 font-medium text-sm transition">
-                            🍽️ Ételek (<span x-text="food.length"></span>)
+                            Ételek (<span x-text="food.length"></span>)
                         </button>
                         <button 
                             type="button" 
                             @click="activeTab = 'drinks'" 
                             :class="{ 'border-gold-500 text-gold-700 bg-white': activeTab === 'drinks', 'border-transparent text-gray-500': activeTab !== 'drinks' }" 
                             class="whitespace-nowrap py-4 px-4 border-b-2 font-medium text-sm transition">
-                            🥤 Italok (<span x-text="drinks.length"></span>)
+                            Italok (<span x-text="drinks.length"></span>)
                         </button>
                     </nav>
                 </div>
