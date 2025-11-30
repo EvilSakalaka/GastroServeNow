@@ -174,7 +174,14 @@ Szeretném valós időben látni a vendégek rendeléseit, hogy gyorsan és pont
 
 Szeretném kezelni a termékkínálatot és beállítani a borravaló opciókat. Az admin felület segítségével szeretném biztosítani, hogy a vendégfelület mindig naprakész árinformációkat és termékinformációkat mutasson, valamint kezelni a felhasználói jogosultságokat és munkameneteket.
 
-## **9\. Elfogadási kritériumok**✅ Rendelések leadása és kezelése működik✅ Felhasználói felület logikus, könnyen használható✅ Rendelés státuszok megfelelően frissülnek✅ Konyha/Bár csak saját tételeket látja✅ Admin funkciók jogosultságkezeléssel működnek**10\. Jövőbeli bővítési lehetőségek**
+## **9\. Elfogadási kritériumok**
+✅ Rendelések leadása és kezelése működik
+✅ Felhasználói felület logikus, könnyen használható
+✅ Rendelés státuszok megfelelően frissülnek
+✅ Konyha/Bár csak saját tételeket látja
+✅ Admin funkciók jogosultságkezeléssel működnek
+
+**10\. Jövőbeli bővítési lehetőségek**
 
 **v1.1 (Q1 2026)**
 
