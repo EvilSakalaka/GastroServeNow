@@ -19,21 +19,16 @@ class OrderController extends Controller
      */
     public function create(GuestSession $guest_session)
     {
-        // 1. Ételek lekérdezése (a .with('allergens') betölti a kapcsolatot)
-        $food = Product::with('allergens')
         // 1. Ételek lekérdezése allergiákkal
-        $food = Product::with('allergens') 
+        $food = Product::with('allergens')
                        ->where('status', 'available')
                        ->where('category', '!=', 'ital')
                        ->orderBy('category')
                        ->orderBy('name')
                        ->get();
 
-        // 2. Italok lekérdezése (a .with('allergens') betölti a kapcsolatot)
-        $drinks = Product::with('allergens')
-                       
         // 2. Italok lekérdezése allergiákkal
-        $drinks = Product::with('allergens') 
+        $drinks = Product::with('allergens')
                          ->where('status', 'available')
                          ->where('category', 'ital')
                          ->orderBy('name')
@@ -44,7 +39,7 @@ class OrderController extends Controller
 
         // 4. Adatok átadása a nézetnek
         return view('waiter.orders.create', compact('guest_session', 'food', 'drinks', 'allergens'));
-        
+
     }
 
 
@@ -111,8 +106,8 @@ class OrderController extends Controller
         $order->load([
             'guestSession',           // Az asztal adatai
             'items.product.allergens' // Az ételek allergiái
-        ]); 
-        
+        ]);
+
         // Visszaadjuk a siker nézetet
         return view('waiter.orders.success', compact('order'));
     }
@@ -120,15 +115,15 @@ class OrderController extends Controller
             public function edit(Order $order)
             {
                 $order->load('items.product.allergens', 'guestSession');
-                
-                $food = Product::with('allergens') 
+
+                $food = Product::with('allergens')
                             ->where('status', 'available')
                             ->where('category', '!=', 'ital')
                             ->orderBy('category')
                             ->orderBy('name')
                             ->get();
-                            
-                $drinks = Product::with('allergens') 
+
+                $drinks = Product::with('allergens')
                                 ->where('status', 'available')
                                 ->where('category', 'ital')
                                 ->orderBy('name')
@@ -182,16 +177,11 @@ class OrderController extends Controller
                 // 5. Visszairányítás a success oldalra
                 return redirect()->route('waiter.orders.success', $order);
             }
-
-            
-
-            
-            
                 public function showPaymentRequest($order_id)
                 {
                     $order = Order::findOrFail($order_id);
                     return view('waiter.orders.payment-request', ['order' => $order]);
                 }
 
-            
+
 }

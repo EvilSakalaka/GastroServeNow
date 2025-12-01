@@ -120,10 +120,6 @@ Route::middleware(['auth'])->group(function () {
     ->middleware('role:waiter,manager')
     ->name('waiter.orders.success');
 
-    Route::post('/waiter/orders/{order}/add-item', [OrderController::class, 'addToExistingOrder'])
-    ->name('waiter.orders.add-item');
-
-    
     Route::get('/waiter/orders/{order}/add-item', [OrderController::class, 'addToExistingOrder'])
         ->middleware('role:waiter,manager')
         ->name('waiter.orders.add-item');
@@ -136,11 +132,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/waiter/orders/payment-request/{order_id}', [OrderController::class, 'showPaymentRequest'])
     ->middleware('role:waiter,manager')
     ->name('waiter.orders.payment-request');
-
-
-    
-
-
 
 });
 
