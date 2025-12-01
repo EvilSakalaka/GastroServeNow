@@ -9,8 +9,6 @@ use App\Http\Controllers\Bartender\DashboardController as BartenderDashboard;
 use App\Http\Controllers\Manager\AdminPageController as ManagerAdminPage;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Waiter\OrderController;
-use App\Http\Controllers\Chef\OrderItemStatusController as ChefOrderItemStatusController;
-use App\Http\Controllers\Bartender\OrderItemStatusController as BartenderOrderItemStatusController;
 
 Route::get('/', function () {
     if (Auth::guest()) {
@@ -69,36 +67,30 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('role:chef,manager')
         ->name('chef.dashboard');
 
-    Route::patch('/chef/order-items/{orderItem}/status', [ChefOrderItemStatusController::class, 'update'])
-        ->middleware('role:chef,manager')
-        ->name('chef.order-items.update-status');
-
     // A PULTOS oldala (Csak 'bartender' ÉS 'manager' láthatja)
     Route::get('/bartender/dashboard', BartenderDashboard::class)
         ->middleware('role:bartender,manager')
         ->name('bartender.dashboard');
-    // Státusz frissítése a rendelési tételnek a pultos által
-    Route::patch('/bartender/order-items/{orderItem}/status', [BartenderOrderItemStatusController::class, 'update'])
-        ->middleware('role:bartender,manager')
-        ->name('bartender.order-items.update-status');
 
     // A MANAGER admin oldala (CSAK 'manager' láthatja)
-    Route::middleware(['auth', 'role:manager'])
-        ->prefix('manager')
-        ->name('manager.')
-        ->group(function () {
+    Route::prefix('manager')->group(function () {
 
-            Route::get('/', ManagerAdminPage::class)->name('admin_page');
-            Route::get('items', [ManagerAdminPage::class, 'showItemsPage'])->name('items_page');
-            Route::get('tip', [ManagerAdminPage::class, 'showTipPage'])->name('tip_page');
-            Route::get('workers', [ManagerAdminPage::class, 'showWorkersPage'])->name('workers_page');
+        Route::get('/', ManagerAdminPage::class)->name('manager.admin_page');
+        Route::get('items', [ManagerAdminPage::class, 'showItemsPage'])->name('manager.items_page');
+        Route::get('tip', [ManagerAdminPage::class, 'showTipPage'])->name('manager.tip_page');
+        Route::get('workers', [ManagerAdminPage::class, 'showWorkersPage'])->name('manager.workers_page');
 
-            Route::post('add-worker', [ManagerAdminPage::class, 'addWorker'])->name('add_worker');
-            Route::post('edit-worker', [ManagerAdminPage::class, 'editWorker'])->name('edit_worker');
-            Route::post('delete-worker', [ManagerAdminPage::class, 'deleteWorker'])->name('delete_worker');
-        });
+        Route::post('add-worker', [ManagerAdminPage::class, 'addWorker'])->name('manager.add_worker');
+        Route::post('edit-worker', [ManagerAdminPage::class, 'editWorker'])->name('manager.edit_worker');
+        Route::post('delete-worker', [ManagerAdminPage::class, 'deleteWorker'])->name('manager.delete_worker');
 
-    Route::patch('/waiter/tables/{table}/make-reserved', [WaiterDashboard::class, 'makeReserved'])
+        Route::post('/add-product', [ManagerAdminPage::class, 'addProduct'])->name('manager.add_product');
+        Route::post('/edit-product', [ManagerAdminPage::class, 'editProduct'])->name('manager.edit_product');
+        Route::post('/delete-product', [ManagerAdminPage::class, 'deleteProduct'])->name('manager.delete_product');
+
+    })->middleware('role:manager');
+
+        Route::patch('/waiter/tables/{table}/make-reserved', [WaiterDashboard::class, 'makeReserved'])
         ->middleware('role:waiter,manager')
         ->name('waiter.tables.makeReserved');
     // Új útvonal a "Felszolgálás" (occupied) állapothoz.
@@ -118,7 +110,18 @@ Route::middleware(['auth'])->group(function () {
     ->middleware('role:waiter,manager')
     ->name('waiter.orders.success');
 
+    Route::post('/waiter/orders/{order}/add-item', [OrderController::class, 'addToExistingOrder'])
+    ->name('waiter.orders.add-item');
 
+
+    Route::get('/waiter/orders/{order}/add-item', [OrderController::class, 'addToExistingOrder'])
+        ->middleware('role:waiter,manager')
+        ->name('waiter.orders.add-item');
+
+    // Meglévő rendeléshez tétel hozzáadása - POST (adatok elmenti)
+    Route::post('/waiter/orders/{order}/add-item', [OrderController::class, 'storeAddedItems'])
+        ->middleware('role:waiter,manager')
+        ->name('waiter.orders.store-add-item');
 
 });
 
