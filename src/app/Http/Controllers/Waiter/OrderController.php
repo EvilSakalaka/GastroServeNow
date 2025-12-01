@@ -19,6 +19,8 @@ class OrderController extends Controller
      */
     public function create(GuestSession $guest_session)
     {
+        // 1. Ételek lekérdezése (a .with('allergens') betölti a kapcsolatot)
+        $food = Product::with('allergens')
         // 1. Ételek lekérdezése allergiákkal
         $food = Product::with('allergens') 
                        ->where('status', 'available')
@@ -26,6 +28,9 @@ class OrderController extends Controller
                        ->orderBy('category')
                        ->orderBy('name')
                        ->get();
+
+        // 2. Italok lekérdezése (a .with('allergens') betölti a kapcsolatot)
+        $drinks = Product::with('allergens')
                        
         // 2. Italok lekérdezése allergiákkal
         $drinks = Product::with('allergens') 
@@ -77,6 +82,10 @@ class OrderController extends Controller
                 'order_id' => $order->order_id,
                 'product_id' => $item['id'],
                 'quantity' => $item['quantity'],
+                'unit_price' => $item['price'], // Fontos elmenteni az akkori árat
+                'area_id' => $item['area_id'],  // A 'product' táblából jön
+                'comment' => $item['comment'] ?? null,
+                'status' => $item['status'] ?? 'ordered', // Alapértelmezett státusz 'ordered'
                 'unit_price' => $item['price'],
                 'area_id' => $item['area_id'],
                 'comment' => $item['comment'] ?? null
@@ -93,6 +102,11 @@ class OrderController extends Controller
      */
     public function showSuccess(Order $order)
     {
+        // Betöltjük a kapcsolódó GuestSession-t, hogy hozzáférjünk az asztal számához
+        // A 'load()' biztosítja, hogy ne kapjunk 'property on null' hibát.
+        $order->load('guestSession');
+
+        // Visszaadjuk az új "siker" nézetet
         // Eager loading - az összes szükséges adat egy lekérdezésben
         $order->load([
             'guestSession',           // Az asztal adatai
