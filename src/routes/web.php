@@ -62,15 +62,24 @@ Route::middleware(['auth'])->group(function () {
         ->name('waiter.tables.makeAvailable');
     // ======================
 
+
     // A SZAKÁCS oldala (Csak 'chef' ÉS 'manager' láthatja)
     Route::get('/chef/dashboard', ChefDashboard::class)
         ->middleware('role:chef,manager')
         ->name('chef.dashboard');
 
+    Route::patch('/chef/order-items/{orderItem}/status', [ChefOrderItemStatusController::class, 'update'])
+        ->middleware('role:chef,manager')
+        ->name('chef.order-items.update-status');
+
     // A PULTOS oldala (Csak 'bartender' ÉS 'manager' láthatja)
     Route::get('/bartender/dashboard', BartenderDashboard::class)
         ->middleware('role:bartender,manager')
         ->name('bartender.dashboard');
+    // Státusz frissítése a rendelési tételnek a pultos által
+    Route::patch('/bartender/order-items/{orderItem}/status', [BartenderOrderItemStatusController::class, 'update'])
+        ->middleware('role:bartender,manager')
+        ->name('bartender.order-items.update-status');
 
     // A MANAGER admin oldala (CSAK 'manager' láthatja)
     Route::prefix('manager')->group(function () {
