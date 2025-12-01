@@ -10,6 +10,7 @@ use App\Models\OrderItem;
 use App\Models\Allergen;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -39,7 +40,6 @@ class OrderController extends Controller
 
         // 4. Adatok átadása a nézetnek
         return view('waiter.orders.create', compact('guest_session', 'food', 'drinks', 'allergens'));
-
     }
 
 
@@ -62,32 +62,34 @@ class OrderController extends Controller
             return back()->withErrors(['cart' => 'A kosár üres.']);
         }
 
-        // 3. Új 'Order' (Rendelés) létrehozása
+        // 3. Kinyerjük a GuestSession-t és annak table_number értékét (server-side authoritative)
+        $guestSession = GuestSession::find($request->input('guest_session_id'));
+        $tableNumber = $guestSession ? $guestSession->table_number : null;
+
+        // 4. Új 'Order' (Rendelés) létrehozása
         $order = Order::create([
             'guest_session_id' => $request->input('guest_session_id'),
+            'table_number' => $tableNumber,
             'status' => 'new',
             'timestamp_ordered' => now(),
             'total_amount' => $request->input('total_amount'),
             'tip_percent' => $request->input('tip_percent', 0),
         ]);
 
-        // 4. 'OrderItem' (Rendelési tételek) létrehozása a kosár alapján
+        // 5. 'OrderItem' (Rendelési tételek) létrehozása a kosár alapján
         foreach ($cart as $item) {
             OrderItem::create([
                 'order_id' => $order->order_id,
                 'product_id' => $item['id'],
                 'quantity' => $item['quantity'],
-                'unit_price' => $item['price'], // Fontos elmenteni az akkori árat
-                'area_id' => $item['area_id'],  // A 'product' táblából jön
-                'comment' => $item['comment'] ?? null,
-                'status' => $item['status'] ?? 'ordered', // Alapértelmezett státusz 'ordered'
                 'unit_price' => $item['price'],
                 'area_id' => $item['area_id'],
-                'comment' => $item['comment'] ?? null
+                'comment' => $item['comment'] ?? null,
+                'status' => $item['status'] ?? 'ordered',
             ]);
         }
 
-        // 5. Visszairányítás a success oldalra
+        // 6. Visszairányítás a success oldalra
         return redirect()->route('waiter.orders.success', $order);
     }
 
@@ -112,76 +114,75 @@ class OrderController extends Controller
         return view('waiter.orders.success', compact('order'));
     }
 
-            public function edit(Order $order)
-            {
-                $order->load('items.product.allergens', 'guestSession');
+    public function edit(Order $order)
+    {
+        $order->load('items.product.allergens', 'guestSession');
 
-                $food = Product::with('allergens')
-                            ->where('status', 'available')
-                            ->where('category', '!=', 'ital')
-                            ->orderBy('category')
-                            ->orderBy('name')
-                            ->get();
+        $food = Product::with('allergens')
+                    ->where('status', 'available')
+                    ->where('category', '!=', 'ital')
+                    ->orderBy('category')
+                    ->orderBy('name')
+                    ->get();
 
-                $drinks = Product::with('allergens')
-                                ->where('status', 'available')
-                                ->where('category', 'ital')
-                                ->orderBy('name')
-                                ->get();
+        $drinks = Product::with('allergens')
+                        ->where('status', 'available')
+                        ->where('category', 'ital')
+                        ->orderBy('name')
+                        ->get();
 
-                $allergens = Allergen::all();
+        $allergens = Allergen::all();
 
-            return view('waiter.orders.add-item', compact('order', 'food', 'drinks', 'allergens'));
-            }
+        return view('waiter.orders.add-item', compact('order', 'food', 'drinks', 'allergens'));
+    }
 
-            public function addToExistingOrder(Order $order)
-            {
-                return $this->edit($order);
-            }
+    public function addToExistingOrder(Order $order)
+    {
+        return $this->edit($order);
+    }
 
-/**
- * Elmenti az új itemeket a meglévő rendeléshez
- */
-            public function storeAddedItems(Request $request, Order $order): RedirectResponse
-            {
-                // 1. Validálás
-                $request->validate([
-                    'cart_json' => 'required|json',
-                    'total_additional' => 'required|numeric|min:0'
-                ]);
+    /**
+     * Elmenti az új itemeket a meglévő rendeléshez
+     */
+    public function storeAddedItems(Request $request, Order $order): RedirectResponse
+    {
+        // 1. Validálás
+        $request->validate([
+            'cart_json' => 'required|json',
+            'total_additional' => 'required|numeric|min:0'
+        ]);
 
-                // 2. Kosár adatok dekódolása
-                $cart = json_decode($request->input('cart_json'), true);
-                if (empty($cart)) {
-                    return back()->withErrors(['cart' => 'A kosár üres.']);
-                }
+        // 2. Kosár adatok dekódolása
+        $cart = json_decode($request->input('cart_json'), true);
+        if (empty($cart)) {
+            return back()->withErrors(['cart' => 'A kosár üres.']);
+        }
 
-                // 3. OrderItem tételek hozzáadása a meglévő rendeléshez
-                foreach ($cart as $item) {
-                    OrderItem::create([
-                        'order_id' => $order->order_id,
-                        'product_id' => $item['id'],
-                        'quantity' => $item['quantity'],
-                        'unit_price' => $item['price'],
-                        'area_id' => $item['area_id'],
-                        'comment' => $item['comment'] ?? null
-                    ]);
-                }
+        // 3. OrderItem tételek hozzáadása a meglévő rendeléshez
+        foreach ($cart as $item) {
+            OrderItem::create([
+                'order_id' => $order->order_id,
+                'product_id' => $item['id'],
+                'quantity' => $item['quantity'],
+                'unit_price' => $item['price'],
+                'area_id' => $item['area_id'],
+                'comment' => $item['comment'] ?? null
+            ]);
+        }
 
-                // 4. Az order összes összegének frissítése
-                $totalAdditional = (float) $request->input('total_additional');
-                $order->update([
-                    'total_amount' => $order->total_amount + $totalAdditional
-                ]);
+        // 4. Az order összes összegének frissítése
+        $totalAdditional = (float) $request->input('total_additional');
+        $order->update([
+            'total_amount' => $order->total_amount + $totalAdditional
+        ]);
 
-                // 5. Visszairányítás a success oldalra
-                return redirect()->route('waiter.orders.success', $order);
-            }
-                public function showPaymentRequest($order_id)
-                {
-                    $order = Order::findOrFail($order_id);
-                    return view('waiter.orders.payment-request', ['order' => $order]);
-                }
+        // 5. Visszairányítás a success oldalra
+        return redirect()->route('waiter.orders.success', $order);
+    }
 
-
+    public function showPaymentRequest($order_id)
+    {
+        $order = Order::findOrFail($order_id);
+        return view('waiter.orders.payment-request', ['order' => $order]);
+    }
 }

@@ -9,6 +9,9 @@ use App\Http\Controllers\Bartender\DashboardController as BartenderDashboard;
 use App\Http\Controllers\Manager\AdminPageController as ManagerAdminPage;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Waiter\OrderController;
+use App\Http\Controllers\Chef\OrderItemStatusController as ChefOrderItemStatusController;
+use App\Http\Controllers\Bartender\OrderItemStatusController as BartenderOrderItemStatusController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     if (Auth::guest()) {
@@ -122,6 +125,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/waiter/orders/{order}/add-item', [OrderController::class, 'addToExistingOrder'])
     ->name('waiter.orders.add-item');
 
+    Route::get('/waiter/orders/payment-request/{order_id}', [OrderController::class, 'showPaymentRequest'])
+        ->middleware('role:waiter,manager')
+        ->name('waiter.orders.payment-request');
 
     Route::get('/waiter/orders/{order}/add-item', [OrderController::class, 'addToExistingOrder'])
         ->middleware('role:waiter,manager')

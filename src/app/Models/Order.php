@@ -22,6 +22,7 @@ class Order extends Model
         'payment_method',
         'tip_percent',
         'total_amount',
+        'table_number',
     ];
 
     public static array $statusOptions = [
@@ -49,6 +50,7 @@ class Order extends Model
         'payment_method' => 'required|string|in:cash,card',
         'tip_percent' => 'nullable|integer|in:0,5,10',
         'total_amount' => 'required|numeric|min:0',
+        'table_number' => 'nullable|integer|exists:table_location,table_number',
     ];
 
     public function items()

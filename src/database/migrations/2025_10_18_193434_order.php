@@ -19,6 +19,8 @@ return new class extends Migration
             $table->integer('tip_percent')->nullable();
             $table->decimal('total_amount', 10, 2);
             $table->foreign('guest_session_id')->references('session_id')->on('guest_session')->onDelete('cascade');
+            $table->integer('table_number')->unsigned();
+            $table->foreign('table_number')->references('table_number')->on('table_location')->onDelete('cascade');
         });
     }
 
