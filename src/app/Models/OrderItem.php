@@ -20,6 +20,7 @@ class OrderItem extends Model
         'quantity',
         'unit_price',
         'comment',
+        'status',
     ];
 
     public static $rules = [
@@ -28,6 +29,7 @@ class OrderItem extends Model
         'quantity' => 'required|integer|min:1',
         'unit_price' => 'required|numeric|min:0',
         'comment' => 'nullable|string|max:255',
+        'status' => 'required|string|in:ordered,preparing,ready,served,cancelled',
     ];
 
     public function order()

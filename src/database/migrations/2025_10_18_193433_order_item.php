@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreign('order_id')->references('order_id')->on('order')->onDelete('cascade');
             $table->foreign('product_id')->references('product_id')->on('product')->onDelete('cascade');
             $table->foreign('area_id')->references('area_id')->on('areas')->onDelete('set null');
+            $table->string('status')->default('ordered'); // Új mező a rendelés item státusz nyomonkövetéséhez
 
         });
     }

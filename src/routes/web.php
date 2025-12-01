@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\MenuController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Waiter\DashboardController as WaiterDashboard;
 use App\Http\Controllers\Chef\DashboardController as ChefDashboard;
@@ -8,6 +9,8 @@ use App\Http\Controllers\Bartender\DashboardController as BartenderDashboard;
 use App\Http\Controllers\Manager\AdminPageController as ManagerAdminPage;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Waiter\OrderController;
+use App\Http\Controllers\Chef\OrderItemStatusController as ChefOrderItemStatusController;
+use App\Http\Controllers\Bartender\OrderItemStatusController as BartenderOrderItemStatusController;
 
 Route::get('/', function () {
     if (Auth::guest()) {
@@ -15,6 +18,8 @@ Route::get('/', function () {
     }
     return redirect()->route('dashboard');
 });
+
+Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
 
 //Route::get('/dashboard', function () {
 //   return view('dashboard');
@@ -64,10 +69,18 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('role:chef,manager')
         ->name('chef.dashboard');
 
+    Route::patch('/chef/order-items/{orderItem}/status', [ChefOrderItemStatusController::class, 'update'])
+        ->middleware('role:chef,manager')
+        ->name('chef.order-items.update-status');
+
     // A PULTOS oldala (Csak 'bartender' ÉS 'manager' láthatja)
     Route::get('/bartender/dashboard', BartenderDashboard::class)
         ->middleware('role:bartender,manager')
         ->name('bartender.dashboard');
+    // Státusz frissítése a rendelési tételnek a pultos által
+    Route::patch('/bartender/order-items/{orderItem}/status', [BartenderOrderItemStatusController::class, 'update'])
+        ->middleware('role:bartender,manager')
+        ->name('bartender.order-items.update-status');
 
     // A MANAGER admin oldala (CSAK 'manager' láthatja)
     Route::middleware(['auth', 'role:manager'])
