@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             AreaSeeder::class,
             ProductSeeder::class,
             UserSeeder::class,
+            ProductAllergenSeeder::class,
+            TableLocationSeeder::class,
         ]);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\MenuController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Waiter\DashboardController as WaiterDashboard;
 use App\Http\Controllers\Chef\DashboardController as ChefDashboard;
@@ -17,6 +18,8 @@ Route::get('/', function () {
     }
     return redirect()->route('dashboard');
 });
+
+Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
 
 //Route::get('/dashboard', function () {
 //   return view('dashboard');
@@ -116,6 +119,26 @@ Route::middleware(['auth'])->group(function () {
      Route::get('/waiter/orders/success/{order}', [OrderController::class, 'showSuccess'])
     ->middleware('role:waiter,manager')
     ->name('waiter.orders.success');
+
+    Route::post('/waiter/orders/{order}/add-item', [OrderController::class, 'addToExistingOrder'])
+    ->name('waiter.orders.add-item');
+
+    
+    Route::get('/waiter/orders/{order}/add-item', [OrderController::class, 'addToExistingOrder'])
+        ->middleware('role:waiter,manager')
+        ->name('waiter.orders.add-item');
+
+    // Meglévő rendeléshez tétel hozzáadása - POST (adatok elmenti)
+    Route::post('/waiter/orders/{order}/add-item', [OrderController::class, 'storeAddedItems'])
+        ->middleware('role:waiter,manager')
+        ->name('waiter.orders.store-add-item');
+
+    Route::get('/waiter/orders/payment-request/{order_id}', [OrderController::class, 'showPaymentRequest'])
+    ->middleware('role:waiter,manager')
+    ->name('waiter.orders.payment-request');
+
+
+    
 
 
 
