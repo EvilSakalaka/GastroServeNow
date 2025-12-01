@@ -25,7 +25,7 @@
                         </x-nav-link>
 
                         <x-nav-link :href="route('chef.dashboard')" :active="request()->routeIs('chef.dashboard')">
-                            {{ __('Szakács') }}
+                            {{ __('Séf') }}
                         </x-nav-link>
 
                         <x-nav-link :href="route('bartender.dashboard')" :active="request()->routeIs('bartender.dashboard')">
@@ -112,7 +112,7 @@
                 </x-responsive-nav-link>
 
                 <x-responsive-nav-link :href="route('chef.dashboard')" :active="request()->routeIs('chef.dashboard')">
-                    {{ __('Szakács') }}
+                    {{ __('Séf') }}
                 </x-responsive-nav-link>
 
                 <x-responsive-nav-link :href="route('bartender.dashboard')" :active="request()->routeIs('bartender.dashboard')">

@@ -16,5 +16,6 @@ return [
     'failed' => 'Hibás felhasználónév vagy jelszó.',
     'password' => 'Hibás jelszó',
     'throttle' => 'Túl sok hibás próbálkozás. Kérlek próbáld újra :seconds másodperc múlva.',
+    'inactive' => 'A felhasználói fiók inaktív. Kérjük, fordulj a menedzserhez.',
 
 ];
