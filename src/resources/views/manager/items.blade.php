@@ -19,8 +19,8 @@
                     <td class="px-4 py-2">{{ $product->name }}</td>
                     <td class="px-4 py-2">{{ $product->category }}</td>
                     <td class="px-4 py-2">{{ $product->price }}</td>
-                    <td class="px-4 py-2">{{ $product->status }}</td>
-                    <td class="px-4 py-2">{{ $product->area->name ?? 'N/A' }}</td>
+                    <td class="px-4 py-2">{{ $statuslabel[$product->status] }}</td>
+                    <td class="px-4 py-2">{{ $product->area->display_name ?? 'N/A' }}</td>
                     <td class="px-4 py-2">
                         @if ($product->photo_url)
                             <img src="{{ $product->photo_url }}" alt="{{ $product->name }}" class="h-12 w-12 object-cover rounded">
@@ -88,11 +88,11 @@
                     <input type="checkbox" id="is_featured" name="is_featured" value="1" class="form-checkbox text-blue-600" {{ old('is_featured') ? 'checked' : '' }}>
                 </div>
                 <div class="mb-3">
-                    <label for="area_id">Terület (area_id):</label>
+                    <label for="area_id">Terület:</label>
                     <select id="area_id" name="area_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                         <option value="">-- Válassz területet --</option>
                         @foreach($areas as $area)
-                            <option value="{{ $area->area_id }}" {{ old('area_id') == $area->area_id ? 'selected' : '' }}>{{ $area->name }}</option>
+                            <option value="{{ $area->area_id }}" {{ old('area_id') == $area->area_id ? 'selected' : '' }}>{{ $area->display_name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -164,11 +164,10 @@
                     <input type="checkbox" id="is_featured" name="is_featured" value="1" class="form-checkbox text-blue-600" {{ old('is_featured') ? 'checked' : '' }}>
                 </div>
                 <div class="mb-3">
-                    <label for="area_id">Terület (area_id):</label>
+                    <label for="area_id">Terület:</label>
                     <select id="area_id" name="area_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                        <option value="">-- Válassz területet --</option>
                         @foreach($areas as $area)
-                            <option value="{{ $area->area_id }}" {{ old('area_id') == $area->area_id ? 'selected' : '' }}>{{ $area->name }}</option>
+                            <option value="{{ $area->area_id }}" {{ old('area_id') == $area->area_id ? 'selected' : '' }}>{{ $area->display_name }}</option>
                         @endforeach
                     </select>
                 </div>

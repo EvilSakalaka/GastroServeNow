@@ -26,7 +26,11 @@ class AdminPageController extends Controller
         $areas = \App\Models\Area::all();
         $allergens = \App\Models\Allergen::all();
         $products = \App\Models\Product::with('area')->orderBy('is_featured', 'desc')->orderBy('name', 'asc')->get();
-        return view('manager.items', ['areas' => $areas, 'products' => $products, 'allergens' => $allergens]);
+        return view('manager.items', ['areas' => $areas, 'products' => $products, 'allergens' => $allergens, 'statuslabel' => [
+            'available' => 'Elérhető',
+            'unavailable' => 'Nem elérhető',
+            'achived' => 'Arhivált',
+        ]]);
     }
     public function showTipPage(Request $request)
     {
@@ -80,10 +84,10 @@ class AdminPageController extends Controller
 
     public function addProduct(ProductAddRequest $request)
     {
-        \Log::info('Termék hozzáadás indítva', ['name' => $request->name]);
+        //\Log::info('Termék hozzáadás indítva', ['name' => $request->name]);
         if ($request->validated()) {
-            \Log::info('Új termék hozzáadva: ' . $request->name);
-            \App\Models\Product::create([
+            //\Log::info('Új termék hozzáadva: ' . $request->name);
+            $product = \App\Models\Product::create([
                 'name' => $request->name,
                 'category' => $request->category,
                 'price' => $request->price,
@@ -92,6 +96,7 @@ class AdminPageController extends Controller
                 'is_featured' => $request->is_featured ?? false,
                 'area_id' => $request->area_id,
             ]);
+            $product->allergens()->attach($request->allergens ?? []);
         }
         return redirect()->route('manager.items_page');
     }

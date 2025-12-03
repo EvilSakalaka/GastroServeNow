@@ -26,7 +26,7 @@ class ProductEditRequest extends FormRequest
             'category' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'status' => 'required|in:available,unavailable',
-            'photo_url' => 'nullable|url|max:255',
+            'photo_url' => ['nullable','url','max:255','regex:/\.(jpg|jpeg|png|gif|webp)$/i'],
             'is_featured' => 'sometimes|boolean',
             'area_id' => 'required|exists:areas,area_id',
         ];
@@ -46,6 +46,7 @@ class ProductEditRequest extends FormRequest
             'status.in' => 'A státusznak elérhető vagy nem elérhető értékűnek kell lennie.',
             'photo_url.url' => 'A fotó URL-nek érvényes URL-nek kell lennie.',
             'photo_url.max' => 'A fotó URL nem lehet hosszabb, mint 255 karakter.',
+            'photo_url.regex' => 'A fotó URL-nek egy érvényes képformátumra kell végződnie (jpg, jpeg, png, gif, webp).',
             'area_id.required' => 'A terület megadása kötelező.',
             'area_id.exists' => 'A kiválasztott terület érvénytelen.',
         ];
