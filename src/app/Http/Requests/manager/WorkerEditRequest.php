@@ -25,7 +25,7 @@ class WorkerEditRequest extends FormRequest
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:50',
             'email' => 'email',
-            'password' => 'nullable|string|min:8',
+            'password' => 'nullable|string|min:8|max:255',
             'role' => 'required|in:manager,waiter,chef,bartender',
             'status' => 'required|in:active,inactive',
         ];
@@ -40,6 +40,7 @@ class WorkerEditRequest extends FormRequest
             'username.max' => 'A felhasználónév nem lehet hosszabb, mint 50 karakter.',
             'email.email' => 'Az email címnek érvényes formátumúnak kell lennie.',
             'password.min' => 'A jelszónak legalább 8 karakter hosszúnak kell lennie.',
+            'password.max' => 'A jelszó nem lehet hosszabb, mint 255 karakter.',
             'role.required' => 'A szerepkör megadása kötelező.',
             'role.in' => 'A szerepkörnek manager, waiter, chef vagy bartender értékűnek kell lennie.',
             'status.required' => 'Az állapot megadása kötelező.',
