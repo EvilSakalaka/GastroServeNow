@@ -138,6 +138,21 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('role:waiter,manager')
         ->name('waiter.orders.store-add-item');
 
+    // vendeg altal valasztott fiztesi mod es atiranyitas a fizetes oldalra
+    Route::post('/waiter/orders/{order}/request-payment', [OrderController::class, 'requestPayment'])
+        ->middleware('role:waiter,manager')
+        ->name('waiter.orders.request-payment');
+
+    //lista a varakozo fizetesekrol
+    Route::get('/waiter/orders/waiting-payments', [OrderController::class, 'waitingPayments'])
+        ->middleware('role:waiter,manager')
+        ->name('waiter.orders.waiting');
+
+    //pincer veglegesiti a fizetest
+    Route::post('/waiter/orders/{order}/confirm-payment', [OrderController::class, 'confirmPayment'])
+        ->middleware('role:waiter,manager')
+        ->name('waiter.orders.confirm-payment');
+
 });
 
 require __DIR__.'/auth.php';

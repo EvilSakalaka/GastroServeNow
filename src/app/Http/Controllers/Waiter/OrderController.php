@@ -8,13 +8,14 @@ use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Allergen;
+use App\Models\TableLocation;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
-    /**
+        /**
      * Megjeleníti a rendelésfelvételi felületet.
      * Átadja az aktív session-t és a termékeket (ételek/italok) allergiákkal.
      */
@@ -27,6 +28,7 @@ class OrderController extends Controller
                        ->orderBy('category')
                        ->orderBy('name')
                        ->get();
+
 
         // 2. Italok lekérdezése allergiákkal
         $drinks = Product::with('allergens')
@@ -42,8 +44,7 @@ class OrderController extends Controller
         return view('waiter.orders.create', compact('guest_session', 'food', 'drinks', 'allergens'));
     }
 
-
-    /**
+        /**
      * Elmenti az új rendelést az adatbázisba.
      */
     public function store(Request $request): RedirectResponse
@@ -55,13 +56,11 @@ class OrderController extends Controller
             'total_amount' => 'required|numeric|min:0',
             'tip_percent' => 'nullable|numeric|min:0'
         ]);
-
         // 2. Kosár adatok dekódolása
         $cart = json_decode($request->input('cart_json'), true);
         if (empty($cart)) {
             return back()->withErrors(['cart' => 'A kosár üres.']);
         }
-
         // 3. Kinyerjük a GuestSession-t és annak table_number értékét (server-side authoritative)
         $guestSession = GuestSession::find($request->input('guest_session_id'));
         $tableNumber = $guestSession ? $guestSession->table_number : null;
@@ -75,7 +74,6 @@ class OrderController extends Controller
             'total_amount' => $request->input('total_amount'),
             'tip_percent' => $request->input('tip_percent', 0),
         ]);
-
         // 5. 'OrderItem' (Rendelési tételek) létrehozása a kosár alapján
         foreach ($cart as $item) {
             OrderItem::create([
@@ -88,12 +86,9 @@ class OrderController extends Controller
                 'status' => $item['status'] ?? 'ordered',
             ]);
         }
-
         // 6. Visszairányítás a success oldalra
         return redirect()->route('waiter.orders.success', $order);
     }
-
-
     /**
      * Megjeleníti a rendelés megerősítő oldalt allergiákkal.
      */
@@ -114,7 +109,7 @@ class OrderController extends Controller
         return view('waiter.orders.success', compact('order'));
     }
 
-    public function edit(Order $order)
+        public function edit(Order $order)
     {
         $order->load('items.product.allergens', 'guestSession');
 
@@ -136,7 +131,90 @@ class OrderController extends Controller
         return view('waiter.orders.add-item', compact('order', 'food', 'drinks', 'allergens'));
     }
 
-    public function addToExistingOrder(Order $order)
+    /**
+     * Vendég  kiválasztott fizetési mód mentése -> státusz waiting_payment,
+     * majd átirányítás a payment-request (köszönjük) oldalra.
+     */
+    public function requestPayment(Request $request, Order $order): RedirectResponse
+    {
+        $request->validate([
+            'payment_method' => 'required|string|in:cash,card,szep',
+        ]);
+
+        $order->update([
+            'status' => 'waiting_payment',
+            'payment_method' => $request->input('payment_method'),
+        ]);
+
+        // Redirect to the thank-you / payment-request page
+        return redirect()->route('waiter.orders.payment-request', $order->order_id)
+                         ->with('status', 'Köszönjük, kérjük várja a pincért.');
+    }
+
+    /**
+     * Show thank-you / waiting page (payment request confirmation).
+     */
+    public function showPaymentRequest($order_id)
+    {
+        $order = Order::with('guestSession')->findOrFail($order_id);
+        return view('waiter.orders.payment-request', compact('order'));
+    }
+
+    /**
+     * Pincér: lista a waiting_payment státuszú rendelések.
+     */
+    public function waitingPayments()
+    {
+        $orders = Order::with('guestSession', 'items.product')
+                       ->where('status', 'waiting_payment')
+                       ->orderBy('timestamp_ordered', 'asc')
+                       ->get();
+
+        return view('waiter.orders.waiting-payments', compact('orders'));
+    }
+
+    /**
+     * Pincér véglegesíti a fizetést: status=paid, timestamp_closed,
+     * felszabadítja a asztalt és inaktiválja a vendég session-t.
+     */
+    public function confirmPayment(Request $request, Order $order): RedirectResponse
+    {
+        $order->update([
+            'status' => 'paid',
+            'timestamp_closed' => now(),
+        ]);
+
+        // Felszabadítjuk az asztalt (ha van) és inaktiváljuk a session-t
+        $tableNumber = optional($order->guestSession)->table_number ?? $order->table_number;
+
+        if ($tableNumber) {
+            $table = TableLocation::find($tableNumber);
+            if ($table) {
+                $table->status = 'available';
+                $table->save();
+            }
+        }
+
+        if ($order->guestSession) {
+            try {
+                $order->guestSession->active = 0;
+                if (isset($order->guestSession->ended_at)) {
+                    $order->guestSession->ended_at = now();
+                } else {
+                    // Best effort - set attribute even if column doesn't exist; won't persist if column missing
+                    $order->guestSession->ended_at = now();
+                }
+                $order->guestSession->save();
+            } catch (\Exception $e) {
+                Log::warning('GuestSession end failed for order '.$order->order_id.': '.$e->getMessage());
+            }
+        }
+
+        return redirect()->route('waiter.orders.waiting')
+                         ->with('status', 'Rendelés #' . $order->order_id . ' kifizetve és asztal felszabadítva.');
+    }
+
+        public function addToExistingOrder(Order $order)
     {
         return $this->edit($order);
     }
@@ -178,11 +256,5 @@ class OrderController extends Controller
 
         // 5. Visszairányítás a success oldalra
         return redirect()->route('waiter.orders.success', $order);
-    }
-
-    public function showPaymentRequest($order_id)
-    {
-        $order = Order::findOrFail($order_id);
-        return view('waiter.orders.payment-request', ['order' => $order]);
     }
 }
