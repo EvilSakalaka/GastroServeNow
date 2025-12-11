@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             #$table->string('role');
-            $table->enum('role', ['waiter', 'chef', 'bartender', 'manager', 'admin']);
+            $table->enum('role', ['waiter', 'chef', 'bartender', 'manager', 'admin'])->nullable();
             $table->enum('status', ['active', 'inactive']);
             $table->unsignedInteger('assigned_area_id')->nullable();
             //$table->dateTime('created_at');
